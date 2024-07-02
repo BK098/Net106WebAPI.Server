@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DataAccess\Base\" />
+    <ProjectReference Include="..\Application.Services\Application.Services.csproj" />
   </ItemGroup>
 
 </Project>

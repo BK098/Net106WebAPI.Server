@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\DataAccess\Base\" />
-    <Folder Include="Contracts\Services\" />
-    <Folder Include="MapperProfiles\" />
-    <Folder Include="Models\Base\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="MediatR" Version="12.3.0" />
   </ItemGroup>
 
 </Project>
