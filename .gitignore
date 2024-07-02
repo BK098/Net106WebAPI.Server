@@ -361,3 +361,32 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Persistence/Data/Seed/EntitySeed/SeedAppUsers.cs
+/Persistence/Data/Seed/EntitySeed/SeedCategories.cs
+/Persistence/Data/Seed/EntitySeed/SeedCombos.cs
+/Persistence/Data/Seed/EntitySeed/SeedImages.cs
+/Persistence/Data/Seed/EntitySeed/SeedOrderItems.cs
+/Persistence/Data/Seed/EntitySeed/SeedOrders.cs
+/Persistence/Data/Seed/EntitySeed/SeedProductEntries.cs
+/Persistence/Data/Seed/EntitySeed/SeedProductItems.cs
+/Persistence/Data/Seed/EntitySeed/SeedProducts.cs
+/Persistence/Data/Seed/EntitySeed/SeedReceiptItems.cs
+/Persistence/Data/Seed/EntitySeed/SeedReceipts.cs
+/Persistence/Data/Seed/EntitySeed/SeedSupliers.cs
+/Persistence/Data/Seed/SeedData.cs
+/Presentation/Program.cs
+/.gitignore
+/Persistence/Data/Seed/SeedChild/SeedAppUsers.cs
+/Persistence/Data/Seed/SeedChild/SeedCategories.cs
+/Persistence/Data/Seed/SeedChild/SeedCombos.cs
+/Persistence/Data/Seed/SeedChild/SeedImages.cs
+/Persistence/Data/Seed/SeedChild/SeedOrderItems.cs
+/Persistence/Data/Seed/SeedChild/SeedOrders.cs
+/Persistence/Data/Seed/SeedChild/SeedProductEntries.cs
+/Persistence/Data/Seed/SeedChild/SeedProductItems.cs
+/Persistence/Data/Seed/SeedChild/SeedProducts.cs
+/Persistence/Data/Seed/SeedChild/SeedReceiptItems.cs
+/Persistence/Data/Seed/SeedChild/SeedReceipts.cs
+/Persistence/Data/Seed/SeedChild/SeedSupliers.cs
+/Persistence/Data/Seed/SeedData.cs
+/Presentation/Program.cs
