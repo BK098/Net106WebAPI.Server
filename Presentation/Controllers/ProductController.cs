@@ -18,11 +18,7 @@ namespace Presentation.Controllers
         public async Task<IActionResult> Post([FromBody] CreateProductCommand productDto)
         {
             var product = await _mediator.Send(productDto);
-            return product.Match<IActionResult>(
-                _ => Ok(product.AsT0),
-                error => BadRequest(product.AsT1),
-                error => BadRequest(product.AsT2));
-            //return Ok();
+            return Ok(product);
         }
     }
 }

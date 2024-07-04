@@ -1,5 +1,7 @@
 ﻿using Application.Services.Contracts.Services.Base;
+using Application.Services.Contracts.Services.Commands;
 using Application.Services.Localizations;
+using Application.Services.Services.Commands;
 
 namespace Presentation.Extensions
 {
@@ -7,8 +9,8 @@ namespace Presentation.Extensions
     {
         public static IServiceCollection AddRegistrationServices(this IServiceCollection services)
         {
-            services.AddScoped<ILocalizationMessageError, LocalizationMessageError>();
-
+            services.AddScoped<ILocalizationMessage, LocalizationMessage>();
+            services.AddScoped<IProductCommandService, ProductCommandService>();
             return services;
         }
     }
