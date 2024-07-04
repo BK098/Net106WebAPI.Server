@@ -10,5 +10,6 @@ namespace Application.Services.Contracts.Repositories
         bool DeleteProduct(Product product);
         Task<IEnumerable<Product>> GetAllProducts();
         Task<Product> GetProductByIdAsync(Guid id);
+        Task<bool> IsUniqueProductName(string name, CancellationToken cancellationToken);
     }
 }
