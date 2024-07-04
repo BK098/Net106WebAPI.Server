@@ -18,7 +18,7 @@ namespace Application.Commands.ProductCommands
         }
 
         public async Task<UserMangeResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
-        {
+            {
             var result = await _productService.CreateProductAsync(request);
             return result;
         }
