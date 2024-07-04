@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace Application.Services.Models.ProductModels
 {
-    public class ProductForCreate : ProdcutBaseDto
+    public class ProductForCreate : ProductBaseDto
     {
     }
     public class ProductForCreateValidator : AbstractValidator<ProductForCreate>

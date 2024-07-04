@@ -14,20 +14,20 @@ namespace Application.Services.Services.Commands
     {
         private readonly IMapper _mapper;
         private readonly ILocalizationMessage _localization;
+        private readonly IProductRepository _productRepository;
         private readonly IValidator<ProductForCreate> _validatorCreate;
         private readonly ILogger<ProductCommandService> _logger;
-        private readonly IProductRepository _repository;
-        public ProductCommandService(IMapper mapper, 
-            ILocalizationMessage localization, 
-            IValidator<ProductForCreate> validatorCreate, 
-            ILogger<ProductCommandService> logger, 
+        public ProductCommandService(IMapper mapper,
+            ILocalizationMessage localization,
+            IValidator<ProductForCreate> validatorCreate,
+            ILogger<ProductCommandService> logger,
             IProductRepository repository)
         {
             _mapper = mapper;
             _localization = localization;
             _validatorCreate = validatorCreate;
             _logger = logger;
-            _repository = repository;
+            _productRepository = repository;
         }
 
         public async Task<UserMangeResponse> CreateProductAsync(ProductForCreate productDto)
@@ -47,8 +47,8 @@ namespace Application.Services.Services.Commands
                 Product product = _mapper.Map<Product>(productDto);
                 product.DateAdded = DateTimeOffset.UtcNow;
 
-                await _repository.CreateProductAsync(product);
-                await _repository.SaveChangesAsync();
+                await _productRepository.CreateProductAsync(product);
+                await _productRepository.SaveChangesAsync();
                 return new UserMangeResponse
                 {
                     Message = "Đã tạo sản phẩm thành công",
