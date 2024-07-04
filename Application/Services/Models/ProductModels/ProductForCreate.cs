@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Application.Services.Models.ProductModels
 {
-    public class ProductForCreate : ProdcutBaseDto
+    public class ProductForCreate : ProductBaseDto
     {
         public Dictionary<string, object> Errors { get; set; } = new Dictionary<string, object>();
     }

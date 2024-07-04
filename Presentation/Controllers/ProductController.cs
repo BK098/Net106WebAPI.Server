@@ -1,4 +1,5 @@
 ﻿using Application.Commands.ProductCommands;
+using Application.Queries.ProductQueries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,18 @@ namespace Presentation.Controllers
             _mediator = mediator;
         }
         // nên gọi sang service chứa tất cả tụi này, sau đó gọi đến dòng 21 send qua ProductCommand
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var products = await _mediator.Send(new GetAllProductsQuery());
+            return Ok(products);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var product = await _mediator.Send(new GetProductByIdQuery() { Id = id });
+            return Ok(product);
+        }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateProductCommand productDto)
         {
