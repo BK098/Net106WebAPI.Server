@@ -1,12 +1,12 @@
 ﻿using Application.Services.Contracts.Repositories;
 using Application.Services.Models.ProductModels.Base;
 using FluentValidation;
+using System.ComponentModel;
 
 namespace Application.Services.Models.ProductModels
 {
     public class ProductForCreate : ProductBaseDto
     {
-        public Dictionary<string, object> Errors { get; set; } = new Dictionary<string, object>();
     }
     public class ProductForCreateValidator : AbstractValidator<ProductForCreate>
     {
@@ -14,16 +14,12 @@ namespace Application.Services.Models.ProductModels
         public ProductForCreateValidator(IProductRepository productRepo)
         {
             _productRepo = productRepo;
-
-            //RuleFor(x => x.Price).NotEqual(0).WithMessage("Không được bằng 0");
             RuleFor(x => x.Price)
-                .GreaterThanOrEqualTo(0).WithMessage("Không được bé hơn 0");
-            RuleFor(x => x.Price)
-                .NotEmpty().WithMessage("Bắt buộc phải có");
+                .GreaterThanOrEqualTo(0).WithMessage(x => $"Giá sản phẩm '{x.Price}' không  được bé hơn 0");
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("Bắt buộc phải có")
-                .NotNull().WithMessage("Không được để trống")
-                .MustAsync(productRepo.IsUniqueProductName).WithMessage("Tên sản phẩm đã tồn tại");
+                .NotEmpty().WithMessage(x => $"Tên sản phẩm '{x.Name}' Bắt buộc phải có")
+                .NotNull().WithMessage(x => $"Tên sản phẩm '{x.Name}' Không được để trống")
+                .MustAsync(productRepo.IsUniqueProductName).WithMessage(x => $"Tên sản phẩm '{x.Name}' đã tồn tại");
         }
     }
 }

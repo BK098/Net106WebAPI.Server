@@ -19,6 +19,10 @@ namespace Presentation.Extensions
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly));
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllProductsQuery).Assembly));
 
+
+            //Category
+            services.AddScoped<ICategoryCommandService, CategoryCommandService>();
+            services.AddScoped<ICategoryQueryService, CategoryQueryService>();
             return services;
         }
     }
