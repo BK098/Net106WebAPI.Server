@@ -1,6 +1,6 @@
 ﻿namespace Application.Services.Models.ProductModels.Base
 {
-    public class ProdcutBaseDto
+    public class ProductBaseDto
     {
         public string Name { get; set; }
         public double Price { get; set; }
