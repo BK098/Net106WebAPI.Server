@@ -10,12 +10,11 @@ namespace Application.Services.Models.CategoryModels
     }
     public class CategoryForCreateValidator : AbstractValidator<CategoryForCreate>
     {
-        private readonly ICategoryRepository _categoryRepo;
+        private readonly ICategoryRepository _categoryRepository;
         public CategoryForCreateValidator(ICategoryRepository categoryRepo)
         {
-            _categoryRepo = categoryRepo;
+            _categoryRepository = categoryRepo;
 
-            //RuleFor(x => x.Price).NotEqual(0).WithMessage("Không được bằng 0");
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Bắt buộc phải có")
                 .NotNull().WithMessage("Không được để trống")

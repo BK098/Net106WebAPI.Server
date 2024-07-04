@@ -1,4 +1,5 @@
-﻿using Application.Services.Models.ProductModels;
+﻿using Application.Services.Models.CategoryModels;
+using Application.Services.Models.ProductModels;
 using FluentValidation;
 
 namespace Presentation.Extensions
@@ -10,6 +11,8 @@ namespace Presentation.Extensions
             //Product
             services.AddScoped<IValidator<ProductForCreate>, ProductForCreateValidator>();
 
+            //Category
+            services.AddScoped<IValidator<CategoryForCreate>, CategoryForCreateValidator>();
             return services;
         }
     }

@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="Queries\ProductQueries\" />
     <Folder Include="Services\Models\Base\" />
-    <Folder Include="Services\Services\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,9 +10,11 @@ namespace Presentation.Extensions
             var config = new MapperConfiguration(c =>
             {
                 c.AddProfile<ProductProfile>();
+                c.AddProfile<CategoryProfile>();
             });
 
             services.AddSingleton<IMapper>(s => config.CreateMapper());
+        
             return services;
         }
     }

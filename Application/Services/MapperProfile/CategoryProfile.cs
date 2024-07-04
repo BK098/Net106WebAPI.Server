@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Services.Models.CategoryModels;
+using AutoMapper;
+using Domain.Entities;
 
 namespace Application.Services.MapperProfile
 {
-    internal class CategoryProfile
+    public class CategoryProfile : Profile
     {
+        
+        public CategoryProfile()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            CreateMap<Category, CategoryForView>();
+            CreateMap<CategoryForCreate, Category>();
+        }
     }
 }
