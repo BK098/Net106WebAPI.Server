@@ -1,16 +1,14 @@
-﻿using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Repositories.Repositories.Base;
+using Application.Services.Contracts.Repositories;
 using Persistence;
-using Repositories.Repositories.Base;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositories.Repositories
 {
-    public class ProductRepository: GeneralReposotory<Product>
+    public class ProductRepository : GeneralReposotory<Product>, IProductRepository
     {
-        public ProductRepository(ApplicationDbContext context): base(context)
-        {
-            
-        }
+        public ProductRepository(ApplicationDbContext context) : base(context) { }
         #region Command
         public async Task<Product> CreateProductAsync(Product product)
         {
@@ -27,6 +25,13 @@ namespace Repositories.Repositories
         }
         #endregion
         #region Queries
+        public async Task<bool> IsUniqueProductName(string name, CancellationToken cancellationToken)
+        {
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Name == name);
+
+            return product == null;
+        }
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
             return await _context.Products
