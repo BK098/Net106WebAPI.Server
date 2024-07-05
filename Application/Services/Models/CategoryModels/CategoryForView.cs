@@ -10,5 +10,4 @@ namespace Application.Services.Models.CategoryModels
     {
         public Guid Id { get; set; }
     }
-
 }

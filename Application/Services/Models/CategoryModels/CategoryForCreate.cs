@@ -6,7 +6,6 @@ namespace Application.Services.Models.CategoryModels
 {
     public class CategoryForCreate : CategoryBaseDto
     {
-        public Dictionary<string, object> Errors { get; set; } = new Dictionary<string, object>();
     }
     public class CategoryForCreateValidator : AbstractValidator<CategoryForCreate>
     {

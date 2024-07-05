@@ -1,13 +1,10 @@
 ﻿using Application.Services.Contracts.Repositories;
 using Application.Services.Models.ProductModels.Base;
 using FluentValidation;
-using System.ComponentModel;
 
 namespace Application.Services.Models.ProductModels
 {
-    public class ProductForCreate : ProductBaseDto
-    {
-    }
+    public class ProductForCreate : ProductBaseDto { }
     public class ProductForCreateValidator : AbstractValidator<ProductForCreate>
     {
         private readonly IProductRepository _productRepo;

@@ -1,5 +1,5 @@
-﻿using Application.Queries.CategoryQueries;
-using Application.Services.Models.CategoryModels;
+﻿using Application.Commands.CategoryCommands;
+using Application.Queries.CategoryQueries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +16,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategoryAsync([FromBody] CategoryForCreate categoryDto)
+        public async Task<IActionResult> CreateCategoryAsync([FromBody] CreateCategoryCommand categoryDto)
         {
             var response = await _mediator.Send(categoryDto);
             return Ok(response);

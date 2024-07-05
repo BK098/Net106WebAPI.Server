@@ -1,26 +1,41 @@
 ﻿using Application.Services.Contracts.Repositories;
-using Application.Services.Contracts.Services.Queries;
 using Application.Services.Models.CategoryModels;
+using AutoMapper;
+using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.CategoryQueries
 {
-    public class GetAllCategoriresQuery
+    public class GetAllCategoriresQuery : CategoryForView, IRequest<CategoryForView> { }
+    public class GetAllCategoriresQueryHandler : IRequestHandler<GetAllCategoriresQuery, CategoryForView>
     {
-        public class GetAllCategoryQuery : CategoryForView, IRequest<CategoryForView> { }
-        public class GetAllCategoryQueryHandler : IRequestHandler<GetAllCategoryQuery, CategoryForView>
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<GetAllCategoriresQueryHandler> _logger;
+
+        public GetAllCategoriresQueryHandler(ICategoryRepository categoryRepository, 
+            IMapper mapper, 
+            ILogger<GetAllCategoriresQueryHandler> logger)
         {
-            private readonly ICategoryQueryService _categoryService;
-
-            public GetAllCategoryQueryHandler(ICategoryQueryService categoryService)
+            _categoryRepository = categoryRepository;
+            _mapper = mapper;
+            _logger = logger;
+        }
+        public async Task<CategoryForView> Handle(GetAllCategoriresQuery request, CancellationToken cancellationToken)
+        {
+            try
             {
-                _categoryService = categoryService;
+                IEnumerable<Category> categories = await _categoryRepository.GetAllCategorys();
+                IList<CategoryForViewItems> items = _mapper.Map<IEnumerable<CategoryForViewItems>>(categories).ToList();
+                CategoryForView result = new CategoryForView();
+                result.Categories = items;
+                return result;
             }
-
-            public async Task<CategoryForView> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
+            catch (Exception ex)
             {
-                return await _categoryService.GetAllCategoriesAsync();
+                _logger.LogError(ex.Message);
+                throw new NullReferenceException(nameof(Handle));
             }
         }
     }
