@@ -15,6 +15,7 @@ namespace Application.Services.MapperProfile
         private void Init()
         {
             CreateMap<Category, CategoryForView>();
+            CreateMap<Category, CategoryForViewItems>();
             CreateMap<CategoryForCreate, Category>();
         }
     }

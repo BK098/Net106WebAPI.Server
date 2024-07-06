@@ -9,8 +9,10 @@ namespace Presentation.Extensions
         {
             //services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProductRepository, ProductRepository>();
+
             services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+            services.AddScoped<IComboRepository, ComboRepository>();
             return services;
         }
     }
