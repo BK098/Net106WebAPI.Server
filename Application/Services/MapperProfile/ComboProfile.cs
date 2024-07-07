@@ -30,7 +30,14 @@ namespace Application.Services.MapperProfile
             CreateMap<ProductComboInforCreate, ProductItem>()
                 .ForMember(src => src.ComboId, opt => opt.Ignore())
                 .ForMember(src => src.Combo, opt => opt.Ignore());
+
             //Update
+            CreateMap<ComboForUpdate, Combo>()
+                .ForMember(src => src.Id, opt => opt.Ignore());
+
+            CreateMap<ProductItemInfoForUpdate, ProductItem>()
+                .ForMember(src => src.ComboId, opt => opt.Ignore())
+                .ForMember(src => src.Combo, opt => opt.Ignore());
         }
     }
 }

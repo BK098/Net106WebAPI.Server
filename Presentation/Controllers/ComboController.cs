@@ -35,5 +35,12 @@ namespace Presentation.Controllers
             var combo = await _mediator.Send(new GetComboByIdQuery() { Id = id });
             return Ok(combo);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(Guid id, [FromBody] UpdateComboCommand comboDto)
+        {
+            comboDto.Id = id;
+            var response = await _mediator.Send(comboDto);
+            return Ok(response);
+        }
     }
 }

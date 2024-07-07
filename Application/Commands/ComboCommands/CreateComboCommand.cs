@@ -40,9 +40,9 @@ namespace Application.Commands.ComboCommands
             }
             try
             {
-                Combo product = _mapper.Map<Combo>(request);
-
-                await _repository.CreateComboAsync(product);
+                Combo combo = _mapper.Map<Combo>(request);
+                combo.ProductItems =_mapper.Map< ICollection<ProductItem>>(request.ProductCombos);
+                await _repository.CreateComboAsync(combo);
                 await _repository.SaveChangesAsync();
                 return new UserMangeResponse
                 {

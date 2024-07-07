@@ -5,19 +5,33 @@ namespace Application.Services.Localizations
 {
     public class LocalizationMessage : ILocalizationMessage
     {
-        public Dictionary<string, object> GetMessageError(Dictionary<string, object> errors, List<ValidationFailure> errorList)
+        public Dictionary<string, List<object>> GetMessageError(Dictionary<string, List<object>> errors, List<ValidationFailure> errorList)
         {
             foreach (var error in errorList)
             {
-                errors.Add(error.PropertyName, error.ErrorMessage);
+                if (errors.ContainsKey(error.PropertyName))
+                {
+                    errors[error.PropertyName].Add(error.ErrorMessage);
+                }
+                else
+                {
+                    errors[error.PropertyName] = new List<object> { error.ErrorMessage };
+                }
             }
             return errors;
         }
-        public Dictionary<string, object> GetMessageData(Dictionary<string, object> data, List<ValidationFailure> valueList)
+        public Dictionary<string, List<object>> GetMessageData(Dictionary<string, List<object>> data, List<ValidationFailure> errorList)
         {
-            foreach (var value in valueList)
+            foreach (var error in errorList)
             {
-                data[value.PropertyName] = value.AttemptedValue;
+                if (data.ContainsKey(error.PropertyName))
+                {
+                    data[error.PropertyName].Add(error.AttemptedValue);
+                }
+                else
+                {
+                    data[error.PropertyName] = new List<object> { error.AttemptedValue };
+                }
             }
             return data;
         }

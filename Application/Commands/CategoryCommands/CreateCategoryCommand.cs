@@ -29,16 +29,7 @@ namespace Application.Commands.CategoryCommands
 
         public async Task<UserMangeResponse> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorCreate.ValidateAsync(request);
-            if (!validationResult.IsValid)
-            {
-                UserMangeResponse items = new UserMangeResponse();
-                items.Message = "Có vấn đề khi thêm loại sản phẩm";
-                items.Data = _localization.GetMessageData(items.Data, validationResult.Errors);
-                items.Errors = _localization.GetMessageError(items.Errors, validationResult.Errors);
-                items.IsSuccess = false;
-                return items;
-            }
+                
             try
             {
                 Category category = _mapper.Map<Category>(request);

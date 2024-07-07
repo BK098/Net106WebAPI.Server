@@ -33,6 +33,14 @@ namespace Repositories.Repositories
 
             return combo == null;
         }
+        public async Task<bool> IsProductItemExist(Guid comboId, Guid productId, CancellationToken cancellationToken)
+        {
+            var combo = await _context.Combos
+            .Include(x => x.ProductItems)
+            .FirstOrDefaultAsync(p => p.Id == comboId, cancellationToken);
+
+            return combo?.ProductItems.Any(x => x.ProductId == productId) ?? false;
+        }
         public async Task<IEnumerable<Combo>> GetAllCombosAsync()
         {
             IEnumerable<Combo> combos = await _context.Combos.Include(x => x.ProductItems)

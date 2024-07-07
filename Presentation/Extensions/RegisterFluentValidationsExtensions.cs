@@ -11,12 +11,15 @@ namespace Presentation.Extensions
         {
             //Product
             services.AddScoped<IValidator<ProductForCreate>, ProductForCreateValidator>();
-
+            services.AddScoped<IValidator<ProductForUpdate>, ProductForUpdateValidator>();
             //Category
             services.AddScoped<IValidator<CategoryForCreate>, CategoryForCreateValidator>();
-
+            services.AddScoped<IValidator<CategoryForUpdate>, CategoryForUpdateValidator>();
             //Combo
             services.AddScoped<IValidator<ComboForCreate>, ComboForCreateValidator>();
+            services.AddScoped<IValidator<ProductComboInforCreate>, ProductComboInforCreateValidator>();
+            services.AddScoped<IValidator<ComboForUpdate>, ComboForUpdateValidator>();
+            services.AddScoped<IValidator<ProductItemInfoForUpdate>, ProductItemInfoForUpdateValidator>();
             return services;
         }
     }

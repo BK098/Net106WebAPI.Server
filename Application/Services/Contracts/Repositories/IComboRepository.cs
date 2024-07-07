@@ -11,5 +11,7 @@ namespace Application.Services.Contracts.Repositories
         Task<IEnumerable<Combo>> GetAllCombosAsync();
         Task<Combo> GetComboByIdAsync(Guid id);
         Task<bool> IsUniqueComboName(string name, CancellationToken cancellationToken);
+        Task<bool> IsProductItemExist(Guid comboId,Guid productId, CancellationToken cancellationToken);
+        
     }
 }
