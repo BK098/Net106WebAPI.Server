@@ -27,5 +27,18 @@ namespace Presentation.Controllers
             var response = await _mediator.Send(new GetAllCategoriresQuery());
             return Ok(response);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var category = await _mediator.Send(new GetCategoryByIdQuery() { Id = id });
+            return Ok(category);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(Guid id, [FromBody] UpdateCategoryCommand categoryDto)
+        {
+            categoryDto.Id = id;
+            var response = await _mediator.Send(categoryDto);
+            return Ok(response);
+        }
     }
 }

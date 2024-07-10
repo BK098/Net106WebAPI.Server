@@ -33,5 +33,12 @@ namespace Presentation.Controllers
             var product = await _mediator.Send(productDto);
             return Ok(product);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(Guid id, [FromBody] UpdateProductCommand productDto)
+        {
+            productDto.Id = id;
+            var response = await _mediator.Send(productDto);
+            return Ok(response);
+        }
     }
 }

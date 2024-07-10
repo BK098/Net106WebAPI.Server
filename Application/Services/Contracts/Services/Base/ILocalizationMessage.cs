@@ -4,7 +4,7 @@ namespace Application.Services.Contracts.Services.Base
 {
     public interface ILocalizationMessage
     {
-        Dictionary<string, object> GetMessageError(Dictionary<string, object> errors, List<ValidationFailure> errorList);
-        Dictionary<string, object> GetMessageData(Dictionary<string, object> errors, List<ValidationFailure> errorList);
+        Dictionary<string, List<object>> GetMessageError(Dictionary<string, List<object>> errors, List<ValidationFailure> errorList);
+        Dictionary<string, List<object>> GetMessageData(Dictionary<string, List<object>> errors, List<ValidationFailure> errorList);
     }
 }

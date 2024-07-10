@@ -389,39 +389,39 @@ public static class SeedData
                 context.SaveChanges();
             }
 
-            // Seed data for ProductItem
+            // Seed data for ProductCombo
             if (!context.ProductItems.Any())
             {
                 context.ProductItems.AddRange(
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 1,
                         ProductId = context.Products.First().Id,
                         ComboId = context.Combos.First().Id
                     },
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 2,
                         ProductId = context.Products.Skip(1).First().Id,
                         ComboId = context.Combos.Skip(1).First().Id
                     },
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 3,
                         ProductId = context.Products.Skip(2).First().Id,
                         ComboId = context.Combos.Skip(2).First().Id
                     },
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 4,
                         ProductId = context.Products.Skip(3).First().Id,
                         ComboId = context.Combos.Skip(3).First().Id
                     },
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 5,

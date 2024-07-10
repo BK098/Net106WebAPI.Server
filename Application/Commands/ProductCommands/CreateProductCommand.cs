@@ -1,4 +1,6 @@
-﻿using Application.Services.Contracts.Repositories;
+﻿using Application.Enums;
+using Application.Helpers;
+using Application.Services.Contracts.Repositories;
 using Application.Services.Contracts.Services.Base;
 using Application.Services.Models.Base;
 using Application.Services.Models.ProductModels;
@@ -36,27 +38,22 @@ namespace Application.Commands.ProductCommands
             var validationResult = await _validatorCreate.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
-                UserMangeResponse items = new UserMangeResponse();
-                items.Message = "Có một số vấn đề khi thêm sản phẩm";
-                items.Data = _localization.GetMessageData(items.Data, validationResult.Errors);
-                items.Errors = _localization.GetMessageError(items.Errors, validationResult.Errors);
-                items.IsSuccess = false;
-                return items;
+                return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "sản phẩm");
             }
             try
             {
+                bool isProductExisted = await _productRepository.IsUniqueProductName(request.Name);
+                if (!isProductExisted)
+                {
+                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "sản phẩm");
+                }
                 Product product = _mapper.Map<Product>(request);
                 product.DateAdded = DateTimeOffset.UtcNow;
 
                 await _productRepository.CreateProductAsync(product);
                 await _productRepository.SaveChangesAsync();
-                return new UserMangeResponse
-                {
-                    Message = "Đã tạo sản phẩm thành công",
-                    IsSuccess = true,
-                    Errors = null,
-                    Data = null
-                };
+
+                return ResponseHelper.SuccessResponse(SuccessCode.CreateSuccess, "sản phẩm");
             }
             catch (Exception ex)
             {

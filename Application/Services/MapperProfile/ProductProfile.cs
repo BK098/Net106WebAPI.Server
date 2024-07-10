@@ -16,6 +16,7 @@ namespace Application.Services.MapperProfile
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
             CreateMap<Product, ProductForView>();
             CreateMap<Product, ProductForViewItems>();
+            CreateMap<ProductForUpdate, Product>().ForMember(src => src.Id, opt => opt.Ignore());
         }
     }
 }

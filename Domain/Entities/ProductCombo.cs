@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
-    public class ProductItem
+    public class ProductCombo
     {
         [Key]
         public Guid Id { get; set; }

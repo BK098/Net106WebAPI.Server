@@ -15,7 +15,9 @@ namespace Application.Services.MapperProfile
         private void Init()
         {
             CreateMap<Category, CategoryForView>();
+            CreateMap<Category, CategoryForViewItems>();
             CreateMap<CategoryForCreate, Category>();
+            CreateMap<CategoryForUpdate, Category>().ForMember(src => src.Id, opt => opt.Ignore());
         }
     }
 }

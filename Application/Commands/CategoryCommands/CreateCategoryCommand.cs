@@ -1,4 +1,6 @@
-﻿using Application.Services.Contracts.Repositories;
+﻿using Application.Enums;
+using Application.Helpers;
+using Application.Services.Contracts.Repositories;
 using Application.Services.Contracts.Services.Base;
 using Application.Services.Models.Base;
 using Application.Services.Models.CategoryModels;
@@ -16,14 +18,14 @@ namespace Application.Commands.CategoryCommands
         private readonly IMapper _mapper;
         private readonly ILocalizationMessage _localization;
         private readonly IValidator<CategoryForCreate> _validatorCreate;
-        private readonly ICategoryRepository _repository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly ILogger<CreateCategoryCommandHandler> _logger;
         public CreateCategoryCommandHandler(IMapper mapper, ILocalizationMessage localization, IValidator<CategoryForCreate> validatorCreate, ICategoryRepository repository, ILogger<CreateCategoryCommandHandler> logger)
         {
             _mapper = mapper;
             _localization = localization;
             _validatorCreate = validatorCreate;
-            _repository = repository;
+            _categoryRepository = repository;
             _logger = logger;
         }
 
@@ -32,25 +34,20 @@ namespace Application.Commands.CategoryCommands
             var validationResult = await _validatorCreate.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
-                UserMangeResponse items = new UserMangeResponse();
-                items.Message = "Có vấn đề khi thêm loại sản phẩm";
-                items.Data = _localization.GetMessageData(items.Data, validationResult.Errors);
-                items.Errors = _localization.GetMessageError(items.Errors, validationResult.Errors);
-                items.IsSuccess = false;
-                return items;
+                return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "Loại hàng");
             }
             try
             {
-                Category category = _mapper.Map<Category>(request);
-                await _repository.CreateCategoryAsync(category);
-                await _repository.SaveChangesAsync();
-                return new UserMangeResponse
+                bool isCategoryExisted = await _categoryRepository.IsUniqueCategoryName(request.Name);
+                if (!isCategoryExisted)
                 {
-                    Message = "Đã tạo thể loại thành công",
-                    IsSuccess = true,
-                    Errors = null,
-                    Data = null
-                };
+                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Loại hàng");
+                }
+                Category category = _mapper.Map<Category>(request);
+                await _categoryRepository.CreateCategoryAsync(category);
+                await _categoryRepository.SaveChangesAsync();
+                return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Loại hàng");
+
             }
             catch (Exception ex)
             {
