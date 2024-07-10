@@ -10,7 +10,7 @@ public static class SeedData
         using (var context = new ApplicationDbContext(
             serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
         {
-            // Seed data for AppUser
+            /*// Seed data for AppUser
             if (!context.Users.Any())
             {
                 context.Users.AddRange(
@@ -81,7 +81,7 @@ public static class SeedData
                     }
                 );
                 context.SaveChanges();
-            }
+            }*/
 
             // Seed data for Category
             if (!context.Categories.Any())
@@ -109,8 +109,8 @@ public static class SeedData
                         IsDeleted = false,
                         Discount = 10,
                         StockQuantity = 50,
-                        DateAdded = DateTimeOffset.Now,
-                        LastUpdated = DateTimeOffset.Now,
+                        DateAdded = DateTimeOffset.UtcNow,
+                        LastUpdated = DateTimeOffset.UtcNow,
                         CategoryId = context.Categories.First().Id
                     },
                     new Product
@@ -122,8 +122,8 @@ public static class SeedData
                         IsDeleted = false,
                         Discount = 20,
                         StockQuantity = 100,
-                        DateAdded = DateTimeOffset.Now,
-                        LastUpdated = DateTimeOffset.Now,
+                        DateAdded = DateTimeOffset.UtcNow,
+                        LastUpdated = DateTimeOffset.UtcNow,
                         CategoryId = context.Categories.Skip(1).First().Id
                     },
                     new Product
@@ -135,8 +135,8 @@ public static class SeedData
                         IsDeleted = false,
                         Discount = 30,
                         StockQuantity = 150,
-                        DateAdded = DateTimeOffset.Now,
-                        LastUpdated = DateTimeOffset.Now,
+                        DateAdded = DateTimeOffset.UtcNow,
+                        LastUpdated = DateTimeOffset.UtcNow,
                         CategoryId = context.Categories.Skip(2).First().Id
                     },
                     new Product
@@ -148,8 +148,8 @@ public static class SeedData
                         IsDeleted = false,
                         Discount = 40,
                         StockQuantity = 200,
-                        DateAdded = DateTimeOffset.Now,
-                        LastUpdated = DateTimeOffset.Now,
+                        DateAdded = DateTimeOffset.UtcNow,
+                        LastUpdated = DateTimeOffset.UtcNow,
                         CategoryId = context.Categories.Skip(3).First().Id
                     },
                     new Product
@@ -161,8 +161,8 @@ public static class SeedData
                         IsDeleted = false,
                         Discount = 50,
                         StockQuantity = 250,
-                        DateAdded = DateTimeOffset.Now,
-                        LastUpdated = DateTimeOffset.Now,
+                        DateAdded = DateTimeOffset.UtcNow,
+                        LastUpdated = DateTimeOffset.UtcNow,
                         CategoryId = context.Categories.Skip(4).First().Id
                     }
                 );
@@ -227,7 +227,7 @@ public static class SeedData
                 context.SaveChanges();
             }
 
-            // Seed data for Image
+            /*// Seed data for Image
             if (!context.Images.Any())
             {
                 context.Images.AddRange(
@@ -247,35 +247,35 @@ public static class SeedData
                     new Order
                     {
                         Id = Guid.NewGuid(),
-                        OrderDate = DateTimeOffset.Now,
+                        OrderDate = DateTimeOffset.UtcNow,
                         TotalAmount = 1000,
                         UserId = context.Users.First().Id
                     },
                     new Order
                     {
                         Id = Guid.NewGuid(),
-                        OrderDate = DateTimeOffset.Now,
+                        OrderDate = DateTimeOffset.UtcNow,
                         TotalAmount = 2000,
                         UserId = context.Users.Skip(1).First().Id
                     },
                     new Order
                     {
                         Id = Guid.NewGuid(),
-                        OrderDate = DateTimeOffset.Now,
+                        OrderDate = DateTimeOffset.UtcNow,
                         TotalAmount = 3000,
                         UserId = context.Users.Skip(2).First().Id
                     },
                     new Order
                     {
                         Id = Guid.NewGuid(),
-                        OrderDate = DateTimeOffset.Now,
+                        OrderDate = DateTimeOffset.UtcNow,
                         TotalAmount = 4000,
                         UserId = context.Users.Skip(3).First().Id
                     },
                     new Order
                     {
                         Id = Guid.NewGuid(),
-                        OrderDate = DateTimeOffset.Now,
+                        OrderDate = DateTimeOffset.UtcNow,
                         TotalAmount = 5000,
                         UserId = context.Users.Skip(4).First().Id
                     }
@@ -334,10 +334,10 @@ public static class SeedData
                     }
                 );
                 context.SaveChanges();
-            }
+            }*/
 
             // Seed data for ProductEntry
-            if (!context.ProductEntries.Any())
+            /*if (!context.ProductEntries.Any())
             {
                 context.ProductEntries.AddRange(
                     new ProductEntry
@@ -345,7 +345,7 @@ public static class SeedData
                         Id = Guid.NewGuid(),
                         Quantity = 10,
                         UnitPrice = 10,
-                        DateUpdated = DateTimeOffset.Now,
+                        DateUpdated = DateTimeOffset.UtcNow,
                         ProductId = context.Products.First().Id,
                         SuplierId = context.Supliers.First().Id
                     },
@@ -354,7 +354,7 @@ public static class SeedData
                         Id = Guid.NewGuid(),
                         Quantity = 20,
                         UnitPrice = 20,
-                        DateUpdated = DateTimeOffset.Now,
+                        DateUpdated = DateTimeOffset.UtcNow,
                         ProductId = context.Products.Skip(1).First().Id,
                         SuplierId = context.Supliers.Skip(1).First().Id
                     },
@@ -363,7 +363,7 @@ public static class SeedData
                         Id = Guid.NewGuid(),
                         Quantity = 30,
                         UnitPrice = 30,
-                        DateUpdated = DateTimeOffset.Now,
+                        DateUpdated = DateTimeOffset.UtcNow,
                         ProductId = context.Products.Skip(2).First().Id,
                         SuplierId = context.Supliers.Skip(2).First().Id
                     },
@@ -372,7 +372,7 @@ public static class SeedData
                         Id = Guid.NewGuid(),
                         Quantity = 40,
                         UnitPrice = 40,
-                        DateUpdated = DateTimeOffset.Now,
+                        DateUpdated = DateTimeOffset.UtcNow,
                         ProductId = context.Products.Skip(3).First().Id,
                         SuplierId = context.Supliers.Skip(3).First().Id
                     },
@@ -381,15 +381,15 @@ public static class SeedData
                         Id = Guid.NewGuid(),
                         Quantity = 50,
                         UnitPrice = 50,
-                        DateUpdated = DateTimeOffset.Now,
+                        DateUpdated = DateTimeOffset.UtcNow,
                         ProductId = context.Products.Skip(4).First().Id,
                         SuplierId = context.Supliers.Skip(4).First().Id
                     }
                 );
                 context.SaveChanges();
-            }
+            }*/
 
-            // Seed data for ProductItem
+            /*// Seed data for ProductItem
             if (!context.ProductItems.Any())
             {
                 context.ProductItems.AddRange(
@@ -440,35 +440,35 @@ public static class SeedData
                     {
                         Id = Guid.NewGuid(),
                         TotalAmount = 1000,
-                        DateReceipt = DateTimeOffset.Now,
+                        DateReceipt = DateTimeOffset.UtcNow,
                         UserId = context.Users.First().Id
                     },
                     new Receipt
                     {
                         Id = Guid.NewGuid(),
                         TotalAmount = 2000,
-                        DateReceipt = DateTimeOffset.Now,
+                        DateReceipt = DateTimeOffset.UtcNow,
                         UserId = context.Users.Skip(1).First().Id
                     },
                     new Receipt
                     {
                         Id = Guid.NewGuid(),
                         TotalAmount = 3000,
-                        DateReceipt = DateTimeOffset.Now,
+                        DateReceipt = DateTimeOffset.UtcNow,
                         UserId = context.Users.Skip(2).First().Id
                     },
                     new Receipt
                     {
                         Id = Guid.NewGuid(),
                         TotalAmount = 4000,
-                        DateReceipt = DateTimeOffset.Now,
+                        DateReceipt = DateTimeOffset.UtcNow,
                         UserId = context.Users.Skip(3).First().Id
                     },
                     new Receipt
                     {
                         Id = Guid.NewGuid(),
                         TotalAmount = 5000,
-                        DateReceipt = DateTimeOffset.Now,
+                        DateReceipt = DateTimeOffset.UtcNow,
                         UserId = context.Users.Skip(4).First().Id
                     }
                 );
@@ -539,7 +539,7 @@ public static class SeedData
                     new Suplier { Id = Guid.NewGuid(), Name = "Suplier5", ContactInfo = "ContactInfo5" }
                 );
                 context.SaveChanges();
-            }
+            }*/
         }
     }
 }

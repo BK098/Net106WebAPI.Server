@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 //Register SQL (PostgreSQL)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("KhangConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("VuConnection"));
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
@@ -49,7 +49,7 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
-// Add CROS
+// Add CORS
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
@@ -84,5 +84,12 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Gọi phương thức SeedData.Initialize
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
+}
 
 app.Run();
