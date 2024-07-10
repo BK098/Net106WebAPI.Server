@@ -1,4 +1,5 @@
-﻿using Application.Commands.CategoryCommands;
+﻿using Application.Enums;
+using Application.Helpers;
 using Application.Services.Contracts.Repositories;
 using Application.Services.Contracts.Services.Base;
 using Application.Services.Models.Base;
@@ -7,28 +8,23 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Text.Json.Serialization;
 
 namespace Application.Commands.CategoryCommands
 {
-    public class UpdateCategoryCommand : CategoryForUpdate, IRequest<UserMangeResponse>
-    {
-        [JsonIgnore]
-        public Guid CategoryId { get; set; }
-    }
+    public class UpdateCategoryCommand : CategoryForUpdate, IRequest<UserMangeResponse> { }
     public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, UserMangeResponse>
     {
-        private readonly ICategoryRepository _comboRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
         private readonly ILocalizationMessage _localization;
         private readonly IValidator<CategoryForUpdate> _validatorUpdate;
         private readonly ILogger<UpdateCategoryCommandHandler> _logger;
-        public UpdateCategoryCommandHandler(ICategoryRepository comboRepository,
+        public UpdateCategoryCommandHandler(ICategoryRepository categoryRepository,
             IMapper mapper, IValidator<CategoryForUpdate> validatorCreate,
             ILogger<UpdateCategoryCommandHandler> logger,
             ILocalizationMessage localization)
         {
-            _comboRepository = comboRepository;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
             _validatorUpdate = validatorCreate;
             _logger = logger;
@@ -40,42 +36,29 @@ namespace Application.Commands.CategoryCommands
             var validationResult = await _validatorUpdate.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
-                UserMangeResponse items = new UserMangeResponse();
-                items.Message = "Có một số vấn đề khi cập nhật Thể Loại";
-                items.Data = _localization.GetMessageData(items.Data, validationResult.Errors);
-                items.Errors = _localization.GetMessageError(items.Errors, validationResult.Errors);
-                items.IsSuccess = false;
-                return items;
+                return ResponseHelper.ErrorResponse(ErrorCode.UpdateError, validationResult.Errors, _localization, "Loại hàng");
             }
             try
             {
-                var existingCategory = await _comboRepository.GetCategoryByIdAsync(request.CategoryId);
-                if (existingCategory == null)
+                bool isCategoryExisted = await _categoryRepository.IsUniqueCategoryName(request.Name);
+                if (!isCategoryExisted)
                 {
-                    return new UserMangeResponse
-                    {
-                        Message = "Thể Loại Này không tồn tại",
-                        IsSuccess = false,
-                        Errors = new Dictionary<string, List<object>>() { { "s", new List<object> { $"Không Tìm Thấy Thể Loại Có Id : '{request.CategoryId}'" } } },
-                        Data = null
-                    };
+                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Loại hàng");
                 }
 
-                _mapper.Map(request, existingCategory);
-                await _comboRepository.SaveChangesAsync();
-
-                return new UserMangeResponse
+                var existingCategory = await _categoryRepository.GetCategoryByIdAsync(request.Id);
+                if (existingCategory != null)
                 {
-                    Message = "Đã tạo Category thành công",
-                    IsSuccess = true,
-                    Errors = null,
-                    Data = null
-                };
+                    _mapper.Map(request, existingCategory);
+                    await _categoryRepository.SaveChangesAsync();
+                    return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Loại hàng");
+                }
+                return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Loại hàng");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                throw new NullReferenceException(nameof(Handle));
+                return ResponseHelper.ErrorResponse(ErrorCode.UpdateError, validationResult.Errors, _localization, "Loại hàng");
             }
         }
     }

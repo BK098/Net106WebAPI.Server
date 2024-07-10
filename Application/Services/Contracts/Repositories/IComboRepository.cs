@@ -10,8 +10,7 @@ namespace Application.Services.Contracts.Repositories
         bool DeleteCombo(Combo combo);
         Task<IEnumerable<Combo>> GetAllCombosAsync();
         Task<Combo> GetComboByIdAsync(Guid id);
-        Task<bool> IsUniqueComboName(string name, CancellationToken cancellationToken);
-        Task<bool> IsProductItemExist(Guid comboId,Guid productId, CancellationToken cancellationToken);
-        
+        Task<bool> IsUniqueComboName(string name);
+        Task<bool> IsProductComboExist(Guid comboId,Guid? productId);
     }
 }

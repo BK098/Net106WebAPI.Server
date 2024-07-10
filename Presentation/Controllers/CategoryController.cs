@@ -1,6 +1,4 @@
 ﻿using Application.Commands.CategoryCommands;
-using Application.Commands.CategoryCommands;
-using Application.Queries.CategoryQueries;
 using Application.Queries.CategoryQueries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +36,7 @@ namespace Presentation.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(Guid id, [FromBody] UpdateCategoryCommand categoryDto)
         {
-            categoryDto.CategoryId = id;
+            categoryDto.Id = id;
             var response = await _mediator.Send(categoryDto);
             return Ok(response);
         }

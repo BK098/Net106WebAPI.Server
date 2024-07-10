@@ -1,5 +1,4 @@
 ﻿using Application.Services.Contracts.Repositories;
-using Application.Services.Contracts.Services.Queries;
 using Application.Services.Models.ComboModels;
 using AutoMapper;
 using Domain.Entities;

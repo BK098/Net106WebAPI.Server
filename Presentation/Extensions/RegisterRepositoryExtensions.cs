@@ -1,5 +1,7 @@
 ﻿using Application.Services.Contracts.Repositories;
+using Application.Services.Contracts.Repositories.Base;
 using Repositories.Repositories;
+using Repositories.Repositories.Base;
 
 namespace Presentation.Extensions
 {
@@ -7,7 +9,7 @@ namespace Presentation.Extensions
     {
         public static IServiceCollection AddRegistrationRepositories(this IServiceCollection services)
         {
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();

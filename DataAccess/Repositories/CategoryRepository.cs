@@ -6,7 +6,7 @@ using Repositories.Repositories.Base;
 
 namespace Repositories.Repositories
 {
-    public class CategoryRepository : GeneralReposotory<Category>,ICategoryRepository
+    public class CategoryRepository : GeneralReposotory<Category>, ICategoryRepository
     {
         public CategoryRepository(ApplicationDbContext context) : base(context) { }
         #region Command
@@ -26,17 +26,14 @@ namespace Repositories.Repositories
         #endregion
 
         #region Queries
-        public async Task<bool> IsUniqueCategoryName(string name, CancellationToken cancellationToken)
+        public async Task<bool> IsUniqueCategoryName(string name)
         {
-            var product = await _context.Categories
-                .FirstOrDefaultAsync(p => p.Name == name);
-
+            var product = await _context.Categories.FirstOrDefaultAsync(p => p.Name == name);
             return product == null;
         }
         public async Task<IEnumerable<Category>> GetAllCategorys()
         {
-            return await _context.Categories
-                .ToListAsync();
+            return await _context.Categories.ToListAsync();
         }
         public async Task<Category> GetCategoryByIdAsync(Guid id)
         {

@@ -10,6 +10,6 @@ namespace Application.Services.Contracts.Repositories
         bool DeleteCategory(Category category);
         Task<IEnumerable<Category>> GetAllCategorys();
         Task<Category> GetCategoryByIdAsync(Guid id);
-        Task<bool> IsUniqueCategoryName(string name, CancellationToken cancellationToken);
+        Task<bool> IsUniqueCategoryName(string name);
     }
 }

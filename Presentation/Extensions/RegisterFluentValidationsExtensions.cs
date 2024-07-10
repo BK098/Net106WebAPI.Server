@@ -17,9 +17,9 @@ namespace Presentation.Extensions
             services.AddScoped<IValidator<CategoryForUpdate>, CategoryForUpdateValidator>();
             //Combo
             services.AddScoped<IValidator<ComboForCreate>, ComboForCreateValidator>();
-            services.AddScoped<IValidator<ProductComboInforCreate>, ProductComboInforCreateValidator>();
+            services.AddScoped<IValidator<ProductComboForCreate>, ProductComboForCreateValidator>();
             services.AddScoped<IValidator<ComboForUpdate>, ComboForUpdateValidator>();
-            services.AddScoped<IValidator<ProductItemInfoForUpdate>, ProductItemInfoForUpdateValidator>();
+            services.AddScoped<IValidator<ProductComboForUpdate>, ProductComboForUpdateValidator>();
             return services;
         }
     }

@@ -7,16 +7,18 @@ namespace Application.Services.Models.ProductModels
     public class ProductForCreate : ProductBaseDto { }
     public class ProductForCreateValidator : AbstractValidator<ProductForCreate>
     {
-        private readonly IProductRepository _productRepo;
-        public ProductForCreateValidator(IProductRepository productRepo)
+        public ProductForCreateValidator()
         {
-            _productRepo = productRepo;
-            RuleFor(x => x.Price)
-                .GreaterThanOrEqualTo(0).WithMessage(x => $"Giá sản phẩm '{x.Price}' không  được bé hơn 0");
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage(x => $"Tên sản phẩm '{x.Name}' Bắt buộc phải có")
-                .NotNull().WithMessage(x => $"Tên sản phẩm '{x.Name}' Không được để trống")
-                .MustAsync(productRepo.IsUniqueProductName).WithMessage(x => $"Tên sản phẩm '{x.Name}' đã tồn tại");
+                .NotEmpty().WithMessage($"Bắt buộc phải có")
+                .NotNull().WithMessage($"Không được để trống");
+            RuleFor(x => x.Price)
+                .GreaterThanOrEqualTo(1).WithMessage($"Không được bé hơn hoặc bằng 0");
+            RuleFor(x => x.Discount)
+                .LessThanOrEqualTo(100).WithMessage("Không được lớn hơn 100")
+                .GreaterThanOrEqualTo(0).WithMessage($"Không được bé 0");
+            RuleFor(x => x.StockQuantity)
+               .GreaterThan(0).WithMessage($"Phải lớn hơn 0");
         }
     }
 }

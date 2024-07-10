@@ -10,14 +10,14 @@ namespace Application.Services.Models.ComboModels
     public class ComboForViewItems : ComboBaseDto
     {
         public Guid Id { get; set; }
-        public List<ComboItemInfoForView> ComboItems { get; set; } = new List<ComboItemInfoForView>();
+        public IList<ProductComboForView> ProductCombos { get; set; } = new List<ProductComboForView>();
     }
-    public class ComboItemInfoForView
+    public class ProductComboForView
     {
         public Guid ProductId { get; set; }
         public string ProductName { get; set; }
         public string? ProductImage { get; set; }
         public double ProductPrice { get; set; }
-        public int Quantity { get; set; }
+        public int Quantity { get; set; } //Product Combo
     }
 }

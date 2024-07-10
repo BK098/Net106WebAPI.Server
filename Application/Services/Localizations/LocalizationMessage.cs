@@ -9,29 +9,24 @@ namespace Application.Services.Localizations
         {
             foreach (var error in errorList)
             {
-                if (errors.ContainsKey(error.PropertyName))
+                if (!errors.ContainsKey(error.PropertyName))
                 {
-                    errors[error.PropertyName].Add(error.ErrorMessage);
+                    errors[error.PropertyName] = new List<object>();
                 }
-                else
-                {
-                    errors[error.PropertyName] = new List<object> { error.ErrorMessage };
-                }
+                errors[error.PropertyName].Add(error.ErrorMessage);
             }
             return errors;
         }
-        public Dictionary<string, List<object>> GetMessageData(Dictionary<string, List<object>> data, List<ValidationFailure> errorList)
+
+        public Dictionary<string, List<object>> GetMessageData(Dictionary<string, List<object>> data, List<ValidationFailure> valueList)
         {
-            foreach (var error in errorList)
+            foreach (var value in valueList)
             {
-                if (data.ContainsKey(error.PropertyName))
+                if (!data.ContainsKey(value.PropertyName))
                 {
-                    data[error.PropertyName].Add(error.AttemptedValue);
+                    data[value.PropertyName] = new List<object>();
                 }
-                else
-                {
-                    data[error.PropertyName] = new List<object> { error.AttemptedValue };
-                }
+                data[value.PropertyName].Add(value.AttemptedValue);
             }
             return data;
         }

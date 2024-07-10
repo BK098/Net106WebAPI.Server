@@ -25,7 +25,7 @@ namespace Repositories.Repositories
         }
         #endregion
         #region Queries
-        public async Task<bool> IsUniqueProductName(string name, CancellationToken cancellationToken)
+        public async Task<bool> IsUniqueProductName(string name)
         {
             var product = await _context.Products
                 .FirstOrDefaultAsync(p => p.Name == name);

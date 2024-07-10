@@ -106,6 +106,9 @@ namespace Persistence.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -271,6 +274,30 @@ namespace Persistence.Data.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ProductCombo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ComboId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComboId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductItems");
+                });
+
             modelBuilder.Entity("Domain.Entities.ProductEntry", b =>
                 {
                     b.Property<Guid>("Id")
@@ -299,30 +326,6 @@ namespace Persistence.Data.Migrations
                     b.HasIndex("SuplierId");
 
                     b.ToTable("ProductEntries");
-                });
-
-            modelBuilder.Entity("Domain.Entities.ProductItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ComboId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ComboId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.Receipt", b =>
@@ -581,6 +584,21 @@ namespace Persistence.Data.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ProductCombo", b =>
+                {
+                    b.HasOne("Domain.Entities.Combo", "Combo")
+                        .WithMany("ProductCombos")
+                        .HasForeignKey("ComboId");
+
+                    b.HasOne("Domain.Entities.Product", "Product")
+                        .WithMany("ProductCombos")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Combo");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Domain.Entities.ProductEntry", b =>
                 {
                     b.HasOne("Domain.Entities.Product", "Product")
@@ -594,21 +612,6 @@ namespace Persistence.Data.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Suplier");
-                });
-
-            modelBuilder.Entity("Domain.Entities.ProductItem", b =>
-                {
-                    b.HasOne("Domain.Entities.Combo", "Combo")
-                        .WithMany("ProductItems")
-                        .HasForeignKey("ComboId");
-
-                    b.HasOne("Domain.Entities.Product", "Product")
-                        .WithMany("ProductItems")
-                        .HasForeignKey("ProductId");
-
-                    b.Navigation("Combo");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Entities.Receipt", b =>
@@ -704,7 +707,7 @@ namespace Persistence.Data.Migrations
 
                     b.Navigation("OrderItems");
 
-                    b.Navigation("ProductItems");
+                    b.Navigation("ProductCombos");
                 });
 
             modelBuilder.Entity("Domain.Entities.Order", b =>
@@ -718,9 +721,9 @@ namespace Persistence.Data.Migrations
 
                     b.Navigation("OrderItems");
 
-                    b.Navigation("ProductEntries");
+                    b.Navigation("ProductCombos");
 
-                    b.Navigation("ProductItems");
+                    b.Navigation("ProductEntries");
 
                     b.Navigation("ReceiptItems");
                 });

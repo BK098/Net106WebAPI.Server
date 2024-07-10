@@ -36,7 +36,7 @@ namespace Presentation.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(Guid id, [FromBody] UpdateProductCommand productDto)
         {
-            productDto.ProductId = id;
+            productDto.Id = id;
             var response = await _mediator.Send(productDto);
             return Ok(response);
         }

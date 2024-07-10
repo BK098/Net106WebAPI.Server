@@ -1,22 +1,22 @@
 ﻿using Application.Services.Contracts.Repositories;
 using Application.Services.Models.ComboModels.Base;
 using FluentValidation;
+using System.Text.Json.Serialization;
 
 namespace Application.Services.Models.ComboModels
 {
     public class ComboForUpdate : ComboBaseDto
     {
-        public List<ProductItemInfoForUpdate> ComboItems { get; set; } = new List<ProductItemInfoForUpdate>();
+        [JsonIgnore]
+        public Guid Id { get; set; }
+        public bool? IsDeleted { get; set; }
+        public IList<ProductComboForUpdate> ProductCombos { get; set; } = new List<ProductComboForUpdate>();
     }
 
     public class ComboForUpdateValidator : AbstractValidator<ComboForUpdate>
     {
-        private readonly IComboRepository _comboRepository;
-
-        public ComboForUpdateValidator(IComboRepository comboRepository)
+        public ComboForUpdateValidator()
         {
-            _comboRepository = comboRepository;
-
             RuleFor(x => x.Name)
                 .NotNull().WithMessage("Tên Combo không được để trống")
                 .NotEmpty().WithMessage("Tên Combo là bắt buộc");
@@ -33,33 +33,26 @@ namespace Application.Services.Models.ComboModels
                 .GreaterThanOrEqualTo(0).WithMessage("Phải lớn hơn hoặc bằng 0")
                 .LessThanOrEqualTo(100).WithMessage("Phải nhỏ hơn hoặc bằng 100");
 
-            RuleForEach(x => x.ComboItems).SetValidator(new ProductItemInfoForUpdateValidator(_comboRepository));
+            RuleForEach(x => x.ProductCombos).SetValidator(new ProductComboForUpdateValidator());
         }
     }
 
-    public class ProductItemInfoForUpdate
+    public class ProductComboForUpdate
     {
-        public Guid Id { get; set; }
+        public Guid ProductId { get; set; }
         public int Quantity { get; set; }
     }
 
-    public class ProductItemInfoForUpdateValidator : AbstractValidator<ProductItemInfoForUpdate>
+    public class ProductComboForUpdateValidator : AbstractValidator<ProductComboForUpdate>
     {
-        private readonly IComboRepository _comboRepository;
-
-        public ProductItemInfoForUpdateValidator(IComboRepository comboRepository)
+        public ProductComboForUpdateValidator()
         {
-            _comboRepository = comboRepository;
-
-            RuleFor(x => x.Id)
-                .NotEmpty().WithMessage("Mã sản phẩm không được để trống")
-                .MustAsync(async (id, cancellationToken) =>
-                {
-                    return await _comboRepository.IsProductItemExist(Guid.NewGuid(), id, cancellationToken);
-                }).WithMessage("Mã sản phẩm không tồn tại trong combo");
+            RuleFor(x => x.ProductId)
+                .NotEmpty().WithMessage("Không được để trống")
+                .NotEmpty().WithMessage("Bắt buộc phải có");
 
             RuleFor(x => x.Quantity)
-                .GreaterThan(0).WithMessage("Số lượng sản phẩm phải lớn hơn 0");
+                .GreaterThanOrEqualTo(1).WithMessage("Số lượng sản phẩm phải lớn hơn hoặc bằng 1");
         }
     }
 }

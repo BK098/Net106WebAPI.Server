@@ -11,9 +11,9 @@ namespace Domain.Entities
         public string? Image { get; set; }
         public int Discount { get; set; }
         public double Price { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
         public ICollection<Image>? Images { get; set; }
-        public ICollection<ProductItem>? ProductItems { get; set; }
+        public ICollection<ProductCombo>? ProductCombos { get; set; }
         public ICollection<OrderItem>? OrderItems { get; set; }
     }
 }

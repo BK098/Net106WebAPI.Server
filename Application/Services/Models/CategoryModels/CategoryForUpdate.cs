@@ -1,21 +1,22 @@
-﻿using Application.Services.Contracts.Repositories;
-using Application.Services.Models.CategoryModels.Base;
-using Application.Services.Models.CategoryModels;
+﻿using Application.Services.Models.CategoryModels.Base;
 using FluentValidation;
+using System.Text.Json.Serialization;
 
 namespace Application.Services.Models.CategoryModels
 {
-    public class CategoryForUpdate : CategoryBaseDto { }
+    public class CategoryForUpdate : CategoryBaseDto
+    {
+        [JsonIgnore]
+        public Guid Id { get; set; }
+        public bool? IsDeleted { get; set; }
+    }
     public class CategoryForUpdateValidator : AbstractValidator<CategoryForUpdate>
     {
-        private readonly ICategoryRepository _categoryRepo;
-        public CategoryForUpdateValidator(ICategoryRepository categoryRepo)
+        public CategoryForUpdateValidator()
         {
-            _categoryRepo = categoryRepo;
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage(x => $"Tên sản phẩm '{x.Name}' Bắt buộc phải có")
-                .NotNull().WithMessage(x => $"Tên sản phẩm '{x.Name}' Không được để trống")
-                .MustAsync(categoryRepo.IsUniqueCategoryName).WithMessage(x => $"Tên sản phẩm '{x.Name}' đã tồn tại");
+                .NotEmpty().WithMessage("Bắt buộc phải có")
+                .NotNull().WithMessage($"Không được để trống");
         }
     }
 }
