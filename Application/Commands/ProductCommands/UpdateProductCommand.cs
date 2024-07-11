@@ -5,6 +5,7 @@ using Application.Services.Contracts.Services.Base;
 using Application.Services.Models.Base;
 using Application.Services.Models.ProductModels;
 using AutoMapper;
+using Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -14,17 +15,17 @@ namespace Application.Commands.ProductCommands
     public class UpdateProductCommand : ProductForUpdate, IRequest<UserMangeResponse> { }
     public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, UserMangeResponse>
     {
-        private readonly IProductRepository _comboRepository;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
         private readonly ILocalizationMessage _localization;
         private readonly IValidator<ProductForUpdate> _validatorUpdate;
         private readonly ILogger<UpdateProductCommandHandler> _logger;
-        public UpdateProductCommandHandler(IProductRepository comboRepository,
+        public UpdateProductCommandHandler(IProductRepository productRepository,
             IMapper mapper, IValidator<ProductForUpdate> validatorCreate,
             ILogger<UpdateProductCommandHandler> logger,
             ILocalizationMessage localization)
         {
-            _comboRepository = comboRepository;
+            _productRepository = productRepository;
             _mapper = mapper;
             _validatorUpdate = validatorCreate;
             _logger = logger;
@@ -40,16 +41,20 @@ namespace Application.Commands.ProductCommands
             }
             try
             {
-                var product = await _comboRepository.GetProductByIdAsync(request.Id);
-                if (product == null)
+                Product product = await _productRepository.GetProductByIdAsync(request.Id);
+                if (product != null)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "sản phẩm");
+                    bool isProductExisted = await _productRepository.IsUniqueProductName(request.Name);
+                    if(!isProductExisted)
+                    {
+                        return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "sản phẩm");
+                    }
+                    _mapper.Map(request, product);
+                    await _productRepository.SaveChangesAsync();
+                    return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "sản phẩm");
                 }
 
-                _mapper.Map(request, product);
-                await _comboRepository.SaveChangesAsync();
-
-                return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "sản phẩm");
+                return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "sản phẩm");
             }
             catch (Exception ex)
             {
