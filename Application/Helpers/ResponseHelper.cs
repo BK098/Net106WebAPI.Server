@@ -32,9 +32,7 @@ namespace Application.Helpers
             return new UserMangeResponse
             {
                 Message = message,
-                IsSuccess = true,
-                Data = null,
-                Errors = null
+                IsSuccess = true
             };
         }
         private static string GetDescription(this Enum value, params object[] args)

@@ -5,6 +5,7 @@ using Application.Services.Contracts.Services.Base;
 using Application.Services.Models.Base;
 using Application.Services.Models.CategoryModels;
 using AutoMapper;
+using Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -40,16 +41,19 @@ namespace Application.Commands.CategoryCommands
             }
             try
             {
-                bool isCategoryExisted = await _categoryRepository.IsUniqueCategoryName(request.Name);
-                if (!isCategoryExisted)
+                Category category = await _categoryRepository.GetCategoryByIdAsync(request.Id);
+                if (category != null)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Loại hàng");
-                }
+                    if (request.Name == category.Name)
+                    {
+                        bool isCategoryExisted = await _categoryRepository.IsUniqueCategoryName(request.Name);
+                        if (!isCategoryExisted)
+                        {
+                            return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Loại hàng");
+                        }
+                    }
 
-                var existingCategory = await _categoryRepository.GetCategoryByIdAsync(request.Id);
-                if (existingCategory != null)
-                {
-                    _mapper.Map(request, existingCategory);
+                    _mapper.Map(request, category);
                     await _categoryRepository.SaveChangesAsync();
                     return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Loại hàng");
                 }

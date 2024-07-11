@@ -9,7 +9,6 @@ using Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Text.Json.Serialization;
 
 namespace Application.Commands.ComboCommands
 {
@@ -45,10 +44,13 @@ namespace Application.Commands.ComboCommands
                 Combo combo = await _unitOfWork.Combo.GetComboByIdAsync(comboDto.Id);
                 if (combo != null)
                 {
-                    bool isComboExisted = await _unitOfWork.Combo.IsUniqueComboName(comboDto.Name);
-                    if (!isComboExisted)
+                    if (comboDto.Name != combo.Name)
                     {
-                        return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Combo");
+                        bool isComboExisted = await _unitOfWork.Combo.IsUniqueComboName(comboDto.Name);
+                        if (!isComboExisted)
+                        {
+                            return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Combo");
+                        }
                     }
 
                     combo.ProductCombos = combo.ProductCombos ?? new List<ProductCombo>();
