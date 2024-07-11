@@ -34,19 +34,19 @@ namespace Application.Commands.CategoryCommands
             var validationResult = await _validatorCreate.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
-                return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "Loại hàng");
+                return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "loại hàng");
             }
             try
             {
                 bool isCategoryExisted = await _categoryRepository.IsUniqueCategoryName(request.Name);
                 if (!isCategoryExisted)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Loại hàng");
+                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "loại hàng");
                 }
                 Category category = _mapper.Map<Category>(request);
                 await _categoryRepository.CreateCategoryAsync(category);
                 await _categoryRepository.SaveChangesAsync();
-                return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Loại hàng");
+                return ResponseHelper.SuccessResponse(SuccessCode.CreateSuccess, "loại hàng");
 
             }
             catch (Exception ex)

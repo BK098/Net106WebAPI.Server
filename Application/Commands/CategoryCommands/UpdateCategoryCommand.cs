@@ -44,7 +44,7 @@ namespace Application.Commands.CategoryCommands
                 Category category = await _categoryRepository.GetCategoryByIdAsync(request.Id);
                 if (category != null)
                 {
-                    if (request.Name == category.Name)
+                    if (request.Name != category.Name)
                     {
                         bool isCategoryExisted = await _categoryRepository.IsUniqueCategoryName(request.Name);
                         if (!isCategoryExisted)

@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Persistence;
 
-public class SeedProductItems
+public class SeedProductCombos
 {
     public static void Seed(ApplicationDbContext context)
     {

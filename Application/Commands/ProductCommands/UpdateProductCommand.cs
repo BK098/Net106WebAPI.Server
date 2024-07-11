@@ -44,10 +44,13 @@ namespace Application.Commands.ProductCommands
                 Product product = await _productRepository.GetProductByIdAsync(request.Id);
                 if (product != null)
                 {
-                    bool isProductExisted = await _productRepository.IsUniqueProductName(request.Name);
-                    if(!isProductExisted)
+                    if (product.Name != request.Name)
                     {
-                        return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "sản phẩm");
+                        bool isProductExisted = await _productRepository.IsUniqueProductName(request.Name);
+                        if (!isProductExisted)
+                        {
+                            return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "sản phẩm");
+                        }
                     }
                     _mapper.Map(request, product);
                     await _productRepository.SaveChangesAsync();

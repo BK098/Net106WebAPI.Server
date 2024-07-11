@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 //Register SQL (PostgreSQL)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("VuConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("KhangConnection"));
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()

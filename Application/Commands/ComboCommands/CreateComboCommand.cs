@@ -19,20 +19,17 @@ namespace Application.Commands.ComboCommands
         private readonly IMapper _mapper;
         private readonly ILocalizationMessage _localization;
         private readonly IValidator<ComboForCreate> _validatorCreate;
-        private readonly IComboRepository _comboRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CreateComboCommandHandler> _logger;
         public CreateComboCommandHandler(IMapper mapper,
             ILocalizationMessage localization,
             IValidator<ComboForCreate> validatorCreate,
-            IComboRepository comboRepository,
             ILogger<CreateComboCommandHandler> logger,
             IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _localization = localization;
             _validatorCreate = validatorCreate;
-            _comboRepository = comboRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
         }
@@ -54,15 +51,15 @@ namespace Application.Commands.ComboCommands
                 Combo combo = _mapper.Map<Combo>(request);
                 combo.ProductCombos = _mapper.Map<ICollection<ProductCombo>>(request.ProductCombos);
 
-                foreach (var productItem in combo.ProductCombos)
+                foreach (var productCombo in combo.ProductCombos)
                 {
-                    var product = await _unitOfWork.Product.GetProductByIdAsync(productItem.ProductId.Value);
+                    var product = await _unitOfWork.Product.GetProductByIdAsync(productCombo.ProductId.Value);
                     if (product == null)
                     {
                         return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Product");
                     }
 
-                    bool isProductInCombo = await _unitOfWork.Combo.IsProductComboExist(combo.Id, productItem?.ProductId);
+                    bool isProductInCombo = await _unitOfWork.Combo.IsProductComboExist(combo.Id, productCombo?.ProductId);
                     if (isProductInCombo)
                     {
                         return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "ProductCombo");
@@ -71,7 +68,7 @@ namespace Application.Commands.ComboCommands
                 await _unitOfWork.Combo.CreateComboAsync(combo);
                 await _unitOfWork.Combo.SaveChangesAsync();
 
-                return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Combo");
+                return ResponseHelper.SuccessResponse(SuccessCode.CreateSuccess, "Combo");
             }
             catch (Exception ex)
             {
