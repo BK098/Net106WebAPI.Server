@@ -28,12 +28,23 @@ namespace Application.Helpers
           SuccessCode successCode,
           string entityName = "")
         {
-            string message = entityName == string.Empty ? successCode.GetDescription() : successCode.GetDescription(entityName);
-            return new UserMangeResponse
+            if (successCode != SuccessCode.LoginSuccess)
             {
-                Message = message,
-                IsSuccess = true
-            };
+                string message = entityName == string.Empty ? successCode.GetDescription() : successCode.GetDescription(entityName);
+                return new UserMangeResponse
+                {
+                    Message = message,
+                    IsSuccess = true
+                };
+            }
+            else
+            {
+                return new UserMangeResponse
+                {
+                    Message = entityName,
+                    IsSuccess = true
+                };
+            }
         }
         private static string GetDescription(this Enum value, params object[] args)
         {

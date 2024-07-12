@@ -1,4 +1,5 @@
-﻿using Application.Services.Models.CategoryModels;
+﻿using Application.Services.Models.AuthenticationModels;
+using Application.Services.Models.CategoryModels;
 using Application.Services.Models.ComboModels;
 using Application.Services.Models.ProductModels;
 using FluentValidation;
@@ -20,6 +21,9 @@ namespace Presentation.Extensions
             services.AddScoped<IValidator<ProductComboForCreate>, ProductComboForCreateValidator>();
             services.AddScoped<IValidator<ComboForUpdate>, ComboForUpdateValidator>();
             services.AddScoped<IValidator<ProductComboForUpdate>, ProductComboForUpdateValidator>();
+            //Authentication
+            services.AddScoped<IValidator<RegisterModel>, RegisterModelValidator>();
+            services.AddScoped<IValidator<LoginModel>, LoginModelValidator>();
             return services;
         }
     }

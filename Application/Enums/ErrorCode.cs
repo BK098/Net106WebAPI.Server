@@ -16,5 +16,7 @@ namespace Application.Enums
         Existed,
         [Description("Không tìm thấy {0}")]
         NotFound,
+        [Description("Mật khẩu đã sai")]
+        WrongPassword
     }
-}
+}   
