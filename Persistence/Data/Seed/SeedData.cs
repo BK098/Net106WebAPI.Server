@@ -1,7 +1,9 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
+using System.Net;
 
 public static class SeedData
 {
@@ -10,18 +12,47 @@ public static class SeedData
         using (var context = new ApplicationDbContext(
             serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
         {
-            /*// Seed data for AppUser
+            // Seed data for AspNetRoles
+            if (!context.Roles.Any())
+            {
+                context.Roles.AddRange(
+                    new IdentityRole
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = "Admin",
+                        NormalizedName = "ADMIN"
+                    },
+                    new IdentityRole
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = "User",
+                        NormalizedName = "USER"
+                    }
+                );
+                context.SaveChanges();
+            }
+
+            // Seed data for AppUser
             if (!context.Users.Any())
             {
                 context.Users.AddRange(
                     new AppUser
                     {
-                        Id = Guid.NewGuid().ToString(), 
+                        Id = Guid.NewGuid().ToString(),
+                        UserName = "Admin",
+                        NormalizedUserName = "ADMIN",
+                        Email = "admin@example.com",
+                        FirstName = "FirstName1",
+                        LastName = "Admin",
+                        Address = "Admin",
+                        ImagePath = "ImagePath"
+                    },
+                    new AppUser
+                    {
+                        Id = Guid.NewGuid().ToString(),
                         UserName = "user1",
                         NormalizedUserName = "USER1",
                         Email = "user1@example.com",
-                        NormalizedEmail = "USER1@EXAMPLE.COM",
-                        EmailConfirmed = true,
                         FirstName = "FirstName1",
                         LastName = "LastName1",
                         Address = "Address1",
@@ -33,8 +64,6 @@ public static class SeedData
                         UserName = "user2",
                         NormalizedUserName = "USER2",
                         Email = "user2@example.com",
-                        NormalizedEmail = "USER2@EXAMPLE.COM",
-                        EmailConfirmed = true,
                         FirstName = "FirstName2",
                         LastName = "LastName2",
                         Address = "Address2",
@@ -46,8 +75,6 @@ public static class SeedData
                         UserName = "user3",
                         NormalizedUserName = "USER3",
                         Email = "user3@example.com",
-                        NormalizedEmail = "USER3@EXAMPLE.COM",
-                        EmailConfirmed = true,
                         FirstName = "FirstName3",
                         LastName = "LastName3",
                         Address = "Address3",
@@ -59,8 +86,6 @@ public static class SeedData
                         UserName = "user4",
                         NormalizedUserName = "USER4",
                         Email = "user4@example.com",
-                        NormalizedEmail = "USER4@EXAMPLE.COM",
-                        EmailConfirmed = true,
                         FirstName = "FirstName4",
                         LastName = "LastName4",
                         Address = "Address4",
@@ -72,8 +97,6 @@ public static class SeedData
                         UserName = "user5",
                         NormalizedUserName = "USER5",
                         Email = "user5@example.com",
-                        NormalizedEmail = "USER5@EXAMPLE.COM",
-                        EmailConfirmed = true,
                         FirstName = "FirstName5",
                         LastName = "LastName5",
                         Address = "Address5",
@@ -81,8 +104,51 @@ public static class SeedData
                     }
                 );
                 context.SaveChanges();
-            }*/
+            }
+            // Seed data for IdentityUserRole
+            if (!context.UserRoles.Any())
+            {
+                var adminRole = context.Roles.FirstOrDefault(r => r.NormalizedName == "ADMIN");
+                var userRole = context.Roles.FirstOrDefault(r => r.NormalizedName == "USER");
+                var users = context.Users.ToList();
 
+                if (adminRole != null && userRole != null && users.Count >= 6)
+                {
+                    context.UserRoles.AddRange(
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = adminRole.Id,
+                            UserId = users[0].Id // Gán role Admin cho user Admin
+                        },
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = userRole.Id,
+                            UserId = users[1].Id // Gán role User cho user1
+                        },
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = userRole.Id,
+                            UserId = users[2].Id // Gán role User cho user2
+                        },
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = userRole.Id,
+                            UserId = users[3].Id // Gán role User cho user3
+                        },
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = userRole.Id,
+                            UserId = users[4].Id // Gán role User cho user4
+                        },
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = userRole.Id,
+                            UserId = users[5].Id // Gán role User cho user5
+                        }
+                    );
+                    context.SaveChanges();
+                }
+            }
             // Seed data for Category
             if (!context.Categories.Any())
             {
@@ -227,7 +293,7 @@ public static class SeedData
                 context.SaveChanges();
             }
 
-            /*// Seed data for Image
+           /* // Seed data for Image
             if (!context.Images.Any())
             {
                 context.Images.AddRange(
@@ -238,9 +304,9 @@ public static class SeedData
                     new Image { Id = Guid.NewGuid(), ImagePath = "ImagePath5" }
                 );
                 context.SaveChanges();
-            }
+            }*/
 
-            // Seed data for Order
+            /*// Seed data for Order
             if (!context.Orders.Any())
             {
                 context.Orders.AddRange(
@@ -281,9 +347,9 @@ public static class SeedData
                     }
                 );
                 context.SaveChanges();
-            }
+            }*/
 
-            // Seed data for OrderItem
+           /* // Seed data for OrderItem
             if (!context.OrderItems.Any())
             {
                 context.OrderItems.AddRange(
@@ -389,39 +455,39 @@ public static class SeedData
                 context.SaveChanges();
             }*/
 
-            /*// Seed data for ProductItem
+            // Seed data for ProductItem
             if (!context.ProductItems.Any())
             {
                 context.ProductItems.AddRange(
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 1,
                         ProductId = context.Products.First().Id,
                         ComboId = context.Combos.First().Id
                     },
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 2,
                         ProductId = context.Products.Skip(1).First().Id,
                         ComboId = context.Combos.Skip(1).First().Id
                     },
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 3,
                         ProductId = context.Products.Skip(2).First().Id,
                         ComboId = context.Combos.Skip(2).First().Id
                     },
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 4,
                         ProductId = context.Products.Skip(3).First().Id,
                         ComboId = context.Combos.Skip(3).First().Id
                     },
-                    new ProductItem
+                    new ProductCombo
                     {
                         Id = Guid.NewGuid(),
                         Quantity = 5,
@@ -432,7 +498,7 @@ public static class SeedData
                 context.SaveChanges();
             }
 
-            // Seed data for Receipt
+            /*// Seed data for Receipt
             if (!context.Receipts.Any())
             {
                 context.Receipts.AddRange(
@@ -441,41 +507,41 @@ public static class SeedData
                         Id = Guid.NewGuid(),
                         TotalAmount = 1000,
                         DateReceipt = DateTimeOffset.UtcNow,
-                        UserId = context.Users.First().Id
+                        UserId = context.Users.First(1).Id
                     },
                     new Receipt
                     {
                         Id = Guid.NewGuid(),
                         TotalAmount = 2000,
                         DateReceipt = DateTimeOffset.UtcNow,
-                        UserId = context.Users.Skip(1).First().Id
+                        UserId = context.Users.Skip(2).First().Id
                     },
                     new Receipt
                     {
                         Id = Guid.NewGuid(),
                         TotalAmount = 3000,
                         DateReceipt = DateTimeOffset.UtcNow,
-                        UserId = context.Users.Skip(2).First().Id
+                        UserId = context.Users.Skip(3).First().Id
                     },
                     new Receipt
                     {
                         Id = Guid.NewGuid(),
                         TotalAmount = 4000,
                         DateReceipt = DateTimeOffset.UtcNow,
-                        UserId = context.Users.Skip(3).First().Id
+                        UserId = context.Users.Skip(4).First().Id
                     },
                     new Receipt
                     {
                         Id = Guid.NewGuid(),
                         TotalAmount = 5000,
                         DateReceipt = DateTimeOffset.UtcNow,
-                        UserId = context.Users.Skip(4).First().Id
+                        UserId = context.Users.Skip(5).First().Id
                     }
                 );
                 context.SaveChanges();
-            }
+            }*/
 
-            // Seed data for ReceiptItem
+            /*// Seed data for ReceiptItem
             if (!context.ReceiptItems.Any())
             {
                 context.ReceiptItems.AddRange(
@@ -526,9 +592,9 @@ public static class SeedData
                     }
                 );
                 context.SaveChanges();
-            }
+            }*/
 
-            // Seed data for Suplier
+            /*// Seed data for Suplier
             if (!context.Supliers.Any())
             {
                 context.Supliers.AddRange(
