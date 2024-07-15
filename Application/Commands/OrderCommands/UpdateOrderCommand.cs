@@ -38,17 +38,17 @@ namespace Application.Commands.OrderCommands
             var validationResult = await _validatorUpdate.ValidateAsync(orderDto);
             if (!validationResult.IsValid)
             {
-                return ResponseHelper.ErrorResponse(ErrorCode.UpdateError, validationResult.Errors, _localization, "Combo");
+                return ResponseHelper.ErrorResponse(ErrorCode.UpdateError, validationResult.Errors, _localization, "Order");
             }
             try
             {
                 var order = await _unitOfWork.Order.GetOrderByIdAsync(orderDto.Id);
                 if (order == null)
                 {
-                    return new UserMangeResponse { Message = "Không tìm thấy phần Order này", };
+                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Order");
                 }
                 order.OrderDate = orderDto.OrderDate;
-                order.OrderStatus = orderDto.Status;
+                order.Status = orderDto.Status;
                 await _unitOfWork.Order.UpdateOrder(order);
                 await _unitOfWork.Order.SaveChangesAsync();
                 return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Order");

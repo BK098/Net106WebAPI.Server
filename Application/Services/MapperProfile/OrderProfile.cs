@@ -15,7 +15,6 @@ namespace Application.Services.MapperProfile
             //view
             CreateMap<Order, OrderForView>();
             CreateMap<Order, OrderForViewItems>()
-                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OrderStatus))
                  //.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.UserName : string.Empty))
                  //.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User != null ? src.User.Id : string.Empty))
                  .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems));
@@ -27,7 +26,6 @@ namespace Application.Services.MapperProfile
             //create
             CreateMap<OrderForCreate, Order>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
-                .ForMember(dest=>dest.OrderStatus,opt => opt.MapFrom(src=>src.Status))
                 .ForMember(dest => dest.OrderItems, opt => opt.Ignore());
 
             CreateMap<OrderItemForCreate, OrderItem>()
@@ -38,8 +36,7 @@ namespace Application.Services.MapperProfile
             /*CreateMap<OrderForUpdate, Order>();*/
             CreateMap<OrderForUpdate, Order>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.OrderItems, opt => opt.Ignore())
-                .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.Status));
+                .ForMember(dest => dest.OrderItems, opt => opt.Ignore());
                 /*CreateMap<OrderDetailForUpdate, OrderDetail>()
                     .ForMember(src => src.OrderId, opt => opt.Ignore())
                     .ForMember(dest => dest.Order, opt => opt.Ignore());*/

@@ -9,14 +9,14 @@ namespace Persistence
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Order>()
-                .Property(o => o.OrderStatus)
+                .Property(o => o.Status)
                 .HasConversion<string>();
 
             base.OnModelCreating(modelBuilder);
-        }
+        }*/
         public DbSet<Category> Categories { get; set; }
         public DbSet<Combo> Combos { get; set; }
         public DbSet<Image> Images { get; set; }

@@ -30,12 +30,6 @@ namespace Application.Queries.OrderQueries
                 IEnumerable<Order> orders = await _orderReponsitory.GetAllOrdersAsync();
                 IList<OrderForViewItems> items = _mapper.Map<IEnumerable<OrderForViewItems>>(orders).ToList();
                 OrderForView response = new OrderForView();
-/*              double totalAmount = 0;
-                foreach (var item in items)
-                {
-                    totalAmount += item.TotalAmount;
-                }
-                response.TotalAmount = totalAmount;*/
                 response.Orders = items;
                 return response;
             }

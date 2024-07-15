@@ -1,19 +1,18 @@
 ﻿
 using Application.Services.Models.OrderModels.Base;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Services.Models.OrderModels
 {
     public class OrderForView
     {
-        /*public double TotalAmount { get; set; }*/
         public IList<OrderForViewItems> Orders { get; set; } = new List<OrderForViewItems>();
     }
     public class OrderForViewItems : OrderBaseDto
     {
         public Guid Id { get;set; }
         public double TotalAmount { get; set; }
-        public Status Status { get; set; }
         public IList<OrderItemForView> OrderItems { get; set; } = new List<OrderItemForView>();
     }
     public class OrderItemForView

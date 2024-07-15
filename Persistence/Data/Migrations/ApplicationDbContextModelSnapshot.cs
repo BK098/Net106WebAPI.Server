@@ -182,9 +182,8 @@ namespace Persistence.Data.Migrations
                     b.Property<DateTimeOffset>("OrderDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("OrderStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<double>("TotalAmount")
                         .HasColumnType("double precision");

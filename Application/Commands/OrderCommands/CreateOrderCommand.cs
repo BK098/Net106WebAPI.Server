@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Application.Helpers;
 using Application.Enums;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Commands.OrderCommands
 {
@@ -51,8 +52,8 @@ namespace Application.Commands.OrderCommands
 
                 Order order = _mapper.Map<Order>(orderDto);
                 order.OrderDate = DateTimeOffset.UtcNow;
-                order.OrderStatus = Status.Processing;
-                order.UserId = "031d367c-ba25-47d6-b05c-6de78260cf97";
+                order.Status = OrderStatus.Processing;
+                order.UserId = "3057932c-6849-40d1-bc8f-89b0f7d8472e";
                 order.OrderItems = _mapper.Map<ICollection<OrderItem>>(orderDto.OrderItems);
                 foreach (var orderItem in order.OrderItems)
                 {
