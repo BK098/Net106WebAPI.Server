@@ -10,6 +10,7 @@ namespace Application.Enums
         UpdateSuccess,
         [Description("Xóa {0} thành công")]
         DeleteSuccess,
+        [Description("Đăng nhập thành công")]
         LoginSuccess
     }
 }

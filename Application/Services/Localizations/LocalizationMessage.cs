@@ -30,5 +30,10 @@ namespace Application.Services.Localizations
             }
             return data;
         }
+
+        public Dictionary<string, object> GetMessageToken(Dictionary<string, object> data)
+        {
+            return data;
+        }
     }
 }

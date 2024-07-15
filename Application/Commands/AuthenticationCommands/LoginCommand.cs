@@ -51,7 +51,7 @@ namespace Application.Commands.AuthenticationCommands
             try
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user != null)
+                if (user == null)
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Email");
                 }
@@ -63,7 +63,8 @@ namespace Application.Commands.AuthenticationCommands
 
                 var claims = new List<Claim>
                 {
-                    new Claim("Email", model.Email),
+                    new Claim("Id", user.Id),
+                    //new Claim("Email", model.Email),
                     new Claim(ClaimTypes.NameIdentifier, user.Id)
                 };
 
@@ -77,7 +78,7 @@ namespace Application.Commands.AuthenticationCommands
                 var token = CreateToken(claims);
                 var refreshToken = GenerateRefreshToken();
 
-                return ResponseHelper.SuccessResponse(SuccessCode.LoginSuccess, new JwtSecurityTokenHandler().WriteToken(token));
+                return ResponseHelper.SuccessResponse(SuccessCode.LoginSuccess, "" ,new JwtSecurityTokenHandler().WriteToken(token));
             }
             catch (Exception ex)
             {

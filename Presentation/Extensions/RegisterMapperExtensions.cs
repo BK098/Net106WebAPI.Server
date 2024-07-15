@@ -13,6 +13,7 @@ namespace Presentation.Extensions
                 c.AddProfile<CategoryProfile>();
                 c.AddProfile<ComboProfile>();
                 c.AddProfile<AuthenticationProfile>();
+                c.AddProfile<UserProfile>();
             });
 
             services.AddSingleton<IMapper>(s => config.CreateMapper());

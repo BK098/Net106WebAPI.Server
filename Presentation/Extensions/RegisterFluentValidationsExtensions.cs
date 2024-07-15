@@ -2,7 +2,9 @@
 using Application.Services.Models.CategoryModels;
 using Application.Services.Models.ComboModels;
 using Application.Services.Models.ProductModels;
+using Application.Services.Models.UserModels;
 using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Extensions
 {
@@ -24,6 +26,10 @@ namespace Presentation.Extensions
             //Authentication
             services.AddScoped<IValidator<RegisterModel>, RegisterModelValidator>();
             services.AddScoped<IValidator<LoginModel>, LoginModelValidator>();
+            services.AddScoped<IValidator<ForgotPasswordModel>, ForgotPasswordModelValidator>();
+            //User
+            services.AddScoped<IValidator<UserProfileForUpdate>, UserProfileForUpdateValidator>();
+
             return services;
         }
     }
