@@ -10,13 +10,17 @@ namespace Repositories.Repositories.Base
         private readonly ApplicationDbContext _context;
         public IComboRepository Combo { get; }
         public IProductRepository Product { get; }
+        public IOrderRepository Order { get; }
+
         public UnitOfWork(ApplicationDbContext context,
             IProductRepository product,
-            IComboRepository combo)
+            IComboRepository combo,
+            IOrderRepository order)
         {
             _context = context;
             Product = product;
             Combo = combo;
+            Order = order;
         }
         public int SaveChanges()
         {

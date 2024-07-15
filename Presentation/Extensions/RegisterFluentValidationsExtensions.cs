@@ -1,5 +1,6 @@
 ﻿using Application.Services.Models.CategoryModels;
 using Application.Services.Models.ComboModels;
+using Application.Services.Models.OrderModels;
 using Application.Services.Models.ProductModels;
 using FluentValidation;
 
@@ -20,6 +21,10 @@ namespace Presentation.Extensions
             services.AddScoped<IValidator<ProductComboForCreate>, ProductComboForCreateValidator>();
             services.AddScoped<IValidator<ComboForUpdate>, ComboForUpdateValidator>();
             services.AddScoped<IValidator<ProductComboForUpdate>, ProductComboForUpdateValidator>();
+            //Order
+            services.AddScoped<IValidator<OrderForCreate>, OrderForCreateValidator>();
+            services.AddScoped<IValidator<OrderItemForCreate>, OrderItemForCreateValidator>();
+            services.AddScoped<IValidator<OrderForUpdate>, OrderForUpdateValidator>();
             return services;
         }
     }
