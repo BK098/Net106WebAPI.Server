@@ -1,9 +1,13 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
 using Presentation.Extensions;
+using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +53,37 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
+builder.Services.AddAuthentication(auth =>
+{
+    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["AuthSettings:Audience"],
+        ValidIssuer = builder.Configuration["AuthSettings:Issuer"],
+        RequireExpirationTime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AuthSettings:Key"])),
+        ValidateIssuerSigningKey = true
+    };
+});
+
+/*builder.Services.AddRateLimiter(options => {
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(
+        httpContext => RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(), 
+            factory: partition => new FixedWindowRateLimiterOptions
+    {
+        AutoReplenishment = true,
+        PermitLimit = 3,
+        QueueLimit = 0,
+        Window = TimeSpan.FromSeconds(30)
+    }));
+});*/
+
 // Add CORS
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
@@ -76,14 +111,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-//app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+app.UseHttpsRedirection();//3
 
-app.UseCors(MyAllowSpecificOrigins);
+//app.UseRateLimiter();
 
-app.UseAuthorization();
+app.UseCors(MyAllowSpecificOrigins);//6
 
-app.MapControllers();
+app.UseAuthentication();//7
+
+app.UseAuthorization();//8
+    
+app.MapControllers();//last
 
 // Gọi phương thức SeedData.Initialize
 using (var scope = app.Services.CreateScope())

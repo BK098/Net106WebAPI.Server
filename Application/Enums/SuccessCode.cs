@@ -9,6 +9,8 @@ namespace Application.Enums
         [Description("Cập nhật {0} thành công")]
         UpdateSuccess,
         [Description("Xóa {0} thành công")]
-        DeleteSuccess
+        DeleteSuccess,
+        [Description("Đăng nhập thành công")]
+        LoginSuccess
     }
 }

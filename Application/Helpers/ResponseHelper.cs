@@ -24,17 +24,41 @@ namespace Application.Helpers
                 IsSuccess = false
             };
         }
-        public static UserMangeResponse SuccessResponse(
-          SuccessCode successCode,
-          string entityName = "")
+        public static UserMangeResponse ErrorResponse(
+           ErrorCode errorCode,
+           string entityName = "")
         {
-            string message = entityName == string.Empty ? successCode.GetDescription() : successCode.GetDescription(entityName);
+            string message = entityName == string.Empty ? errorCode.GetDescription() : errorCode.GetDescription(entityName);
             return new UserMangeResponse
             {
                 Message = message,
-                IsSuccess = true
+                IsSuccess = false
             };
         }
+        public static UserMangeResponse SuccessResponse(
+            SuccessCode successCode,
+            string entityName = "",
+            string token = null)
+        {
+            var response = new UserMangeResponse
+            {
+                IsSuccess = true
+            };
+            string message = string.IsNullOrEmpty(entityName) ? successCode.GetDescription() : successCode.GetDescription(entityName);
+
+            if (successCode == SuccessCode.LoginSuccess && token != null)
+            {
+                response.Message = message;
+                response.Data["Token"] = new List<object> { token };
+            }
+            else
+            {
+                response.Message = message;
+            }
+
+            return response;
+        }
+
         private static string GetDescription(this Enum value, params object[] args)
         {
             FieldInfo field = value.GetType().GetField(value.ToString());

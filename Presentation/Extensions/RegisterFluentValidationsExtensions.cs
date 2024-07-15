@@ -1,8 +1,11 @@
-﻿using Application.Services.Models.CategoryModels;
+﻿using Application.Services.Models.AuthenticationModels;
+using Application.Services.Models.CategoryModels;
 using Application.Services.Models.ComboModels;
 using Application.Services.Models.OrderModels;
 using Application.Services.Models.ProductModels;
+using Application.Services.Models.UserModels;
 using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Extensions
 {
@@ -21,6 +24,13 @@ namespace Presentation.Extensions
             services.AddScoped<IValidator<ProductComboForCreate>, ProductComboForCreateValidator>();
             services.AddScoped<IValidator<ComboForUpdate>, ComboForUpdateValidator>();
             services.AddScoped<IValidator<ProductComboForUpdate>, ProductComboForUpdateValidator>();
+
+            //Authentication
+            services.AddScoped<IValidator<RegisterModel>, RegisterModelValidator>();
+            services.AddScoped<IValidator<LoginModel>, LoginModelValidator>();
+            services.AddScoped<IValidator<ForgotPasswordModel>, ForgotPasswordModelValidator>();
+            //User
+            services.AddScoped<IValidator<UserProfileForUpdate>, UserProfileForUpdateValidator>();
             //Order
             services.AddScoped<IValidator<OrderForCreate>, OrderForCreateValidator>();
             services.AddScoped<IValidator<OrderItemForCreate>, OrderItemForCreateValidator>();

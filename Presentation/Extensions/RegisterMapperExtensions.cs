@@ -12,6 +12,8 @@ namespace Presentation.Extensions
                 c.AddProfile<ProductProfile>();
                 c.AddProfile<CategoryProfile>();
                 c.AddProfile<ComboProfile>();
+                c.AddProfile<AuthenticationProfile>();
+                c.AddProfile<UserProfile>();
                 c.AddProfile<OrderProfile>();
             });
 
