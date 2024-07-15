@@ -15,6 +15,7 @@ namespace Presentation.Extensions
             services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             services.AddScoped<IComboRepository, ComboRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             return services;
         }
     }
