@@ -66,11 +66,10 @@ namespace Application.Commands.AuthenticationCommands
 
                 if (result.Succeeded)
                 {
-                    await EnsureRoleExistsAsync("Customer");
                     var roles = await _signInManager.UserManager.GetRolesAsync(user);
                     if (!roles.Any())
                     {
-                        await _signInManager.UserManager.AddToRoleAsync(user, "Customer");
+                        await _signInManager.UserManager.AddToRoleAsync(user, "User");
                     }
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return new UserMangeResponse
@@ -85,20 +84,6 @@ namespace Application.Commands.AuthenticationCommands
             {
                 _logger.LogError(ex.Message);
                 throw new NullReferenceException(nameof(Handle));
-            }
-        }
-        private async Task EnsureRoleExistsAsync(string roleName)
-        {
-            if (!await _roleManager.RoleExistsAsync(roleName))
-            {
-                var role = new IdentityRole(roleName);
-                var result = await _roleManager.CreateAsync(role);
-                if (!result.Succeeded)
-                {
-                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                    _logger.LogError("Failed to create role '{RoleName}': {Errors}", roleName, errors);
-                    throw new ApplicationException($"Failed to create role '{roleName}': {errors}");
-                }
             }
         }
     }
