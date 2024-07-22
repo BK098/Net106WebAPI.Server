@@ -19,6 +19,9 @@ namespace Application.Services.Models.ProductModels
                 .GreaterThanOrEqualTo(0).WithMessage($"Không được bé 0");
             RuleFor(x => x.StockQuantity)
                .GreaterThan(0).WithMessage($"Phải lớn hơn 0");
+            RuleFor(x => x.CategoryId)
+                .NotEmpty().WithMessage($"Bắt buộc phải có")
+                .NotNull().WithMessage($"Không được để trống");
         }
     }
 }

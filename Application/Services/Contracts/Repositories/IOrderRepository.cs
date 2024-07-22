@@ -1,4 +1,5 @@
 ﻿using Application.Services.Contracts.Repositories.Base;
+using Application.Services.Models.Base;
 using Domain.Entities;
 
 namespace Application.Services.Contracts.Repositories
@@ -9,8 +10,8 @@ namespace Application.Services.Contracts.Repositories
         Task<Order> UpdateOrder(Order order);
         Task<IEnumerable<Order>> GetAllOrdersAsync();
         Task<Order> GetOrderByIdAsync(Guid id);
-        //Task<bool> IsComboOrProductOrderExist(Guid orderId, Guid? comboId, Guid? productId);
         Task<bool> IsComboOrProductOrderExist(Guid? comboId, Guid? productId);
-
+        IQueryable<Order> GetAllOrders(SearchBaseModel model, CancellationToken cancellationToken);
+        IQueryable<Order> GetAllOrdersHitory(SearchBaseModel model, string userId, CancellationToken cancellationToken);
     }
 }

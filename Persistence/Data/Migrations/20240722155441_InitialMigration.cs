@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Persistence.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Init_v1 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -211,7 +211,7 @@ namespace Persistence.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     OrderDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     TotalAmount = table.Column<double>(type: "double precision", nullable: false),
-                    OrderStatus = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -326,6 +326,30 @@ namespace Persistence.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductCombos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ComboId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductCombos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductCombos_Combos_ComboId",
+                        column: x => x.ComboId,
+                        principalTable: "Combos",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductCombos_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductEntries",
                 columns: table => new
                 {
@@ -348,30 +372,6 @@ namespace Persistence.Data.Migrations
                         name: "FK_ProductEntries_Supliers_SuplierId",
                         column: x => x.SuplierId,
                         principalTable: "Supliers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductItems",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: true),
-                    ComboId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductItems_Combos_ComboId",
-                        column: x => x.ComboId,
-                        principalTable: "Combos",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ProductItems_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
                         principalColumn: "Id");
                 });
 
@@ -469,6 +469,16 @@ namespace Persistence.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductCombos_ComboId",
+                table: "ProductCombos",
+                column: "ComboId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductCombos_ProductId",
+                table: "ProductCombos",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductEntries_ProductId",
                 table: "ProductEntries",
                 column: "ProductId");
@@ -477,16 +487,6 @@ namespace Persistence.Data.Migrations
                 name: "IX_ProductEntries_SuplierId",
                 table: "ProductEntries",
                 column: "SuplierId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductItems_ComboId",
-                table: "ProductItems",
-                column: "ComboId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductItems_ProductId",
-                table: "ProductItems",
-                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
@@ -534,10 +534,10 @@ namespace Persistence.Data.Migrations
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
-                name: "ProductEntries");
+                name: "ProductCombos");
 
             migrationBuilder.DropTable(
-                name: "ProductItems");
+                name: "ProductEntries");
 
             migrationBuilder.DropTable(
                 name: "ReceiptItems");
@@ -549,10 +549,10 @@ namespace Persistence.Data.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Supliers");
+                name: "Combos");
 
             migrationBuilder.DropTable(
-                name: "Combos");
+                name: "Supliers");
 
             migrationBuilder.DropTable(
                 name: "Products");

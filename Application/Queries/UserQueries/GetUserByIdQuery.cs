@@ -12,8 +12,8 @@ using System.Text.Json.Serialization;
 
 namespace Application.Queries.UserQueries
 {
-    public class GetUserByIdQuery : UserForViewItems, IRequest<OneOf<UserForViewItems, UserMangeResponse>> { }
-    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, OneOf<UserForViewItems, UserMangeResponse>>
+    public record GetUserByIdQuery(Guid id) : IRequest<OneOf<UserForView, UserMangeResponse>> { }
+    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, OneOf<UserForView, UserMangeResponse>>
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
@@ -32,16 +32,16 @@ namespace Application.Queries.UserQueries
             _logger = logger;
             _mapper = mapper;
         }
-        public async Task<OneOf<UserForViewItems, UserMangeResponse>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<OneOf<UserForView, UserMangeResponse>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                AppUser user = await _userManager.FindByIdAsync(request.Id);
+                AppUser user = await _userManager.FindByIdAsync(request.id.ToString());
                 if (user == null)
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "User");
                 }
-                UserForViewItems item = _mapper.Map<UserForViewItems>(user);
+                UserForView item = _mapper.Map<UserForView>(user);
                 return item;
             }
             catch (Exception ex)

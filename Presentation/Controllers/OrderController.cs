@@ -1,45 +1,85 @@
 ﻿using Application.Commands.OrderCommands;
-using Application.Queries.ComboQueries;
 using Application.Queries.OrderQueries;
+using Application.Services.Models.Base;
+using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
     {
+        private readonly UserManager<AppUser> _userManager;
         private readonly IMediator _mediator;
-        public OrderController(IMediator mediator)
+        public OrderController(IMediator mediator, UserManager<AppUser> userManager)
         {
             _mediator = mediator;
+            _userManager = userManager;
+        }
+
+        [HttpGet]
+        [Authorize("admin")]
+        public async Task<IActionResult> GetAll([FromQuery] SearchBaseModel model)
+        {
+            var orders = new GetAllOrdersQuery(model);
+            var response = await _mediator.Send(orders);
+            return Ok(response);
+        }
+
+        [HttpGet("history")]
+        [Authorize]
+        public async Task<IActionResult> GetOrderHistory([FromQuery] SearchBaseModel model)
+        {
+            var getUser = await _userManager.GetUserAsync(User);
+            var orders = new GetOrdersHistoryQuery(model, getUser);
+            var response = await _mediator.Send(orders);
+            return Ok(response);
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var order = new GetOrderByIdQuery(id);
+            var response = await _mediator.Send(order);
+            return response.Match<IActionResult>(
+                _ => Ok(response.AsT1),
+                error => NotFound(response.AsT0));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateOrderCommand orderDto)
+        [Authorize]
+        public async Task<IActionResult> Create([FromBody] CreateOrderCommand orderDto)
         {
+            var getUser = await _userManager.GetUserAsync(User);
+            if (getUser == null)
+            {
+                return NotFound($"Unable to load getUser with ID '{_userManager.GetUserId(User)}'.");
+            }
+            orderDto.UserId = getUser.Id;
             var response = await _mediator.Send(orderDto);
-            return Ok(response);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var response = await _mediator.Send(new GetAllOrdersQuery());
-            return Ok(response);
-        }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var order = await _mediator.Send(new GetOrderByIdQuery() { Id = id });
-            return Ok(order);
-        }
+       
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] UpdateOrderCommand orderDto)
+        [Authorize("admin")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOrderCommand orderDto)
         {
             orderDto.Id = id;
             var response = await _mediator.Send(orderDto);
-            return Ok(response);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
     }
 }

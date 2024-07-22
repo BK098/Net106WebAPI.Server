@@ -1,11 +1,10 @@
 ﻿using Application.Commands.AuthenticationCommands;
-using Application.Services.Models.AuthenticationModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -17,20 +16,32 @@ namespace Presentation.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginCommand model)
         {
-            var result = await _mediator.Send(model);
-            return Ok(result);
+            var response = await _mediator.Send(model);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterCommand model)
         {
-            var result = await _mediator.Send(model);
-            return Ok(result);
+            var response = await _mediator.Send(model);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
         [HttpPost("forgotpassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand model)
         {
-            var result = await _mediator.Send(model);
-            return Ok(result);
+            var response = await _mediator.Send(model);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
     }
 }

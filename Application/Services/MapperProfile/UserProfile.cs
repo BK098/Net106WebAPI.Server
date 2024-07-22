@@ -16,7 +16,9 @@ namespace Application.Services.MapperProfile
         private void Init()
         {
             CreateMap<AppUser, UserForView>();
-            CreateMap<AppUser, UserForViewItems>();
+           //.ForMember(dest => dest.Role, opt => opt.MapFrom(x => x.)))
+
+                
             CreateMap<UserProfileForUpdate, AppUser>()
            .ForMember(dest => dest.UserName, opt => opt.Ignore())
            .ForMember(dest => dest.NormalizedUserName, opt => opt.Ignore())

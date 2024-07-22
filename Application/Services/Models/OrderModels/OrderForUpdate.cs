@@ -1,6 +1,4 @@
-﻿using Application.Services.Models.ComboModels;
-using Application.Services.Models.OrderModels.Base;
-using Domain.Entities;
+﻿using Application.Services.Models.OrderModels.Base;
 using FluentValidation;
 using System.Text.Json.Serialization;
 

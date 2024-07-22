@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using Persistence;
 using Presentation.Extensions;
 using System.Text;
-using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,19 +69,6 @@ builder.Services.AddAuthentication(auth =>
         ValidateIssuerSigningKey = true
     };
 });
-
-/*builder.Services.AddRateLimiter(options => {
-    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(
-        httpContext => RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(), 
-            factory: partition => new FixedWindowRateLimiterOptions
-    {
-        AutoReplenishment = true,
-        PermitLimit = 3,
-        QueueLimit = 0,
-        Window = TimeSpan.FromSeconds(30)
-    }));
-});*/
 
 // Add CORS
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

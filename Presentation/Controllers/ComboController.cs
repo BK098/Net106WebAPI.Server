@@ -1,8 +1,8 @@
 ﻿using Application.Commands.ComboCommands;
-using Application.Queries.CategoryQueries;
 using Application.Queries.ComboQueries;
-using Application.Queries.ProductQueries;
+using Application.Services.Models.Base;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
@@ -17,30 +17,47 @@ namespace Presentation.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] SearchBaseModel model)
+        {
+            var combos = new GetAllCombosQuery(model);
+            var response = await _mediator.Send(combos);
+            return Ok(response);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var combo = new GetComboByIdQuery(id);
+            var response = await _mediator.Send(combo);
+            return response.Match<IActionResult>(
+                _ => Ok(response.AsT1),
+                error => NotFound(response.AsT0));
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateComboCommand categoryDto)
+        [Authorize("admin")]
+        public async Task<IActionResult> Create([FromBody] CreateComboCommand categoryDto)
         {
             var response = await _mediator.Send(categoryDto);
-            return Ok(response);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var response = await _mediator.Send(new GetAllCombosQuery());
-            return Ok(response);
-        }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var combo = await _mediator.Send(new GetComboByIdQuery() { Id = id });
-            return Ok(combo);
-        }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] UpdateComboCommand comboDto)
+        [Authorize("admin")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateComboCommand comboDto)
         {
             comboDto.Id = id;
             var response = await _mediator.Send(comboDto);
-            return Ok(response);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
     }
 }

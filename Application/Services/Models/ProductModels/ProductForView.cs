@@ -2,12 +2,9 @@
 
 namespace Application.Services.Models.ProductModels
 {
-    public class ProductForView
-    {
-        public IList<ProductForViewItems> Products { get; set; } = new List<ProductForViewItems>();
-    }
-    public class ProductForViewItems: ProductBaseDto
+    public class ProductForView: ProductBaseDto
     {
         public Guid Id { get; set; }
+        public string CategoryName { get; set; }
     }
 }

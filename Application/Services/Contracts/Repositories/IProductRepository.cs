@@ -1,4 +1,5 @@
 ﻿using Application.Services.Contracts.Repositories.Base;
+using Application.Services.Models.Base;
 using Domain.Entities;
 
 namespace Application.Services.Contracts.Repositories
@@ -11,5 +12,6 @@ namespace Application.Services.Contracts.Repositories
         Task<IEnumerable<Product>> GetAllProducts();
         Task<Product> GetProductByIdAsync(Guid id);
         Task<bool> IsUniqueProductName(string name);
+        IQueryable<Product> GetAllProducts(SearchBaseModel model, CancellationToken cancellationToken);
     }
 }

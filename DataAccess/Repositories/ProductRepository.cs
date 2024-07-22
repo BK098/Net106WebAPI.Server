@@ -3,6 +3,8 @@ using Application.Services.Contracts.Repositories;
 using Persistence;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using Application.Services.Models.Base;
 
 namespace Repositories.Repositories
 {
@@ -28,7 +30,7 @@ namespace Repositories.Repositories
         public async Task<bool> IsUniqueProductName(string name)
         {
             var product = await _context.Products
-                .FirstOrDefaultAsync(p => p.Name == name);
+                .FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower());
 
             return product == null;
         }
@@ -39,12 +41,49 @@ namespace Repositories.Repositories
                 .Include(p => p.Images)
                 .ToListAsync();
         }
+        public IQueryable<Product> GetAllProducts(SearchBaseModel model, CancellationToken cancellationToken)
+        {
+            var productQuery = _context.Products
+                .Include(c => c.Category)
+                .Include(c => c.Images)
+                .AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrEmpty(model.SearchTerm))
+            {
+                productQuery = productQuery.Where(p =>
+                    p.Name.ToLower().Contains(model.SearchTerm.ToLower()) ||
+                    p.Category.Name.ToLower().Contains(model.SearchTerm.ToLower()));
+            }
+
+            if (model.SortOrder?.ToLower() == "desc")
+            {
+                productQuery = productQuery.OrderByDescending(GetSortProperty(model.SortColumn));
+            }
+            else
+            {
+                productQuery = productQuery.OrderBy(GetSortProperty(model.SortColumn));
+            }
+
+            return productQuery;
+        }
         public async Task<Product> GetProductByIdAsync(Guid id)
         {
             return await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Images)
                 .SingleOrDefaultAsync(p => p.Id == id);
+        }
+        private static Expression<Func<Product, object>> GetSortProperty(string? sortColumn)
+        {
+            return sortColumn?.ToLower() switch
+            {
+                "name" => product => product.Name,
+                "price" => product => product.Price,
+                "discount" => product => product.Discount,
+                "quantity" => product => product.StockQuantity,
+                "category" => product => product.Category.Name,
+                _ => product => product.Id
+            };
         }
         #endregion
     }

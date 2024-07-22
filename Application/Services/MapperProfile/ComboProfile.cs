@@ -13,9 +13,7 @@ namespace Application.Services.MapperProfile
         }
         public void Init()
         {
-            CreateMap<Combo, ComboForView>();
-
-            CreateMap<Combo, ComboForViewItems>()
+            CreateMap<Combo, ComboForView>()
              .ForMember(c => c.ProductCombos, p => p.MapFrom(s => s.ProductCombos));
             CreateMap<ProductCombo, ProductComboForView>()
                 .ForMember(c => c.ProductImage, p => p.MapFrom(s => s.Product.Image))

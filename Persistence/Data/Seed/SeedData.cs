@@ -456,9 +456,9 @@ public static class SeedData
             }*/
 
             // Seed data for ProductItem
-            if (!context.ProductItems.Any())
+            if (!context.ProductCombos.Any())
             {
-                context.ProductItems.AddRange(
+                context.ProductCombos.AddRange(
                     new ProductCombo
                     {
                         Id = Guid.NewGuid(),

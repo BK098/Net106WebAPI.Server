@@ -1,6 +1,5 @@
 ﻿using Application.Services.Models.OrderModels.Base;
 using FluentValidation;
-using System.Text.Json.Serialization;
 
 namespace Application.Services.Models.OrderModels
 {

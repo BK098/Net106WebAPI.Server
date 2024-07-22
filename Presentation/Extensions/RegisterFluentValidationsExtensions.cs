@@ -5,7 +5,6 @@ using Application.Services.Models.OrderModels;
 using Application.Services.Models.ProductModels;
 using Application.Services.Models.UserModels;
 using FluentValidation;
-using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Extensions
 {
@@ -24,7 +23,6 @@ namespace Presentation.Extensions
             services.AddScoped<IValidator<ProductComboForCreate>, ProductComboForCreateValidator>();
             services.AddScoped<IValidator<ComboForUpdate>, ComboForUpdateValidator>();
             services.AddScoped<IValidator<ProductComboForUpdate>, ProductComboForUpdateValidator>();
-
             //Authentication
             services.AddScoped<IValidator<RegisterModel>, RegisterModelValidator>();
             services.AddScoped<IValidator<LoginModel>, LoginModelValidator>();

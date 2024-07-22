@@ -32,37 +32,38 @@ namespace Application.Commands.CategoryCommands
             _localization = localization;
         }
 
-        public async Task<UserMangeResponse> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<UserMangeResponse> Handle(UpdateCategoryCommand categoryDto, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorUpdate.ValidateAsync(request);
+            var validationResult = await _validatorUpdate.ValidateAsync(categoryDto);
             if (!validationResult.IsValid)
             {
-                return ResponseHelper.ErrorResponse(ErrorCode.UpdateError, validationResult.Errors, _localization, "Loại hàng");
+                return ResponseHelper.ErrorResponse(ErrorCode.UpdateError, validationResult.Errors, _localization, "loại hàng");
             }
             try
             {
-                Category category = await _categoryRepository.GetCategoryByIdAsync(request.Id);
-                if (category != null)
+                Category category = await _categoryRepository.GetCategoryByIdAsync(categoryDto.Id);
+                if (category == null)
                 {
-                    if (request.Name != category.Name)
-                    {
-                        bool isCategoryExisted = await _categoryRepository.IsUniqueCategoryName(request.Name);
-                        if (!isCategoryExisted)
-                        {
-                            return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Loại hàng");
-                        }
-                    }
-
-                    _mapper.Map(request, category);
-                    await _categoryRepository.SaveChangesAsync();
-                    return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Loại hàng");
+                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "loại hàng");
                 }
-                return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Loại hàng");
+                if (categoryDto.Name != category.Name)
+                {
+                    bool isCategoryExisted = await _categoryRepository.IsUniqueCategoryName(categoryDto.Name);
+                    if (!isCategoryExisted)
+                    {
+                        return ResponseHelper.ErrorResponse(ErrorCode.Existed, $"Loại hàng {categoryDto.Name}");
+                    }
+                }
+
+                _mapper.Map(categoryDto, category);
+                _categoryRepository.UpdateCategory(category);
+                await _categoryRepository.SaveChangesAsync();
+                return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Loại hàng");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return ResponseHelper.ErrorResponse(ErrorCode.UpdateError, validationResult.Errors, _localization, "Loại hàng");
+                return ResponseHelper.ErrorResponse(ErrorCode.OperationFailed, validationResult.Errors, _localization, "Loại hàng");
             }
         }
     }

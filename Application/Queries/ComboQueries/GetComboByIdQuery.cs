@@ -1,15 +1,19 @@
-﻿using Application.Services.Contracts.Repositories;
+﻿using Application.Enums;
+using Application.Helpers;
+using Application.Services.Contracts.Repositories;
 using Application.Services.Contracts.Services.Base;
+using Application.Services.Models.Base;
 using Application.Services.Models.ComboModels;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using OneOf;
 
 namespace Application.Queries.ComboQueries
 {
-    public class GetComboByIdQuery : ComboForViewItems, IRequest<ComboForViewItems> { }
-    public class GetComboByIdQueryHandler : IRequestHandler<GetComboByIdQuery, ComboForViewItems>
+    public record GetComboByIdQuery(Guid id) : IRequest<OneOf<UserMangeResponse, ComboForView>> { }
+    public class GetComboByIdQueryHandler : IRequestHandler<GetComboByIdQuery, OneOf<UserMangeResponse, ComboForView>>
     {
         private readonly IMapper _mapper;
         private readonly ILocalizationMessage _localization;
@@ -25,12 +29,16 @@ namespace Application.Queries.ComboQueries
             _comboRepository = repository;
             _logger = logger;
         }
-        public async Task<ComboForViewItems> Handle(GetComboByIdQuery request, CancellationToken cancellationToken)
+        public async Task<OneOf<UserMangeResponse, ComboForView>> Handle(GetComboByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                Combo product = await _comboRepository.GetComboByIdAsync(request.Id);
-                ComboForViewItems item = _mapper.Map<ComboForViewItems>(product);
+                Combo combo = await _comboRepository.GetComboByIdAsync(request.id);
+                if (combo == null)
+                {
+                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "combo");
+                }
+                ComboForView item = _mapper.Map<ComboForView>(combo);
                 return item;
             }
             catch (Exception ex)
