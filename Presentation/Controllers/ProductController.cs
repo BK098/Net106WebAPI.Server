@@ -2,6 +2,7 @@
 using Application.Queries.ProductQueries;
 using Application.Services.Models.Base;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
@@ -37,6 +38,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize("admin")]
         public async Task<IActionResult> Create([FromBody] CreateProductCommand productDto)
         {
             var response = await _mediator.Send(productDto);
@@ -48,6 +50,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize("admin")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductCommand productDto)
         {
             productDto.Id = id;

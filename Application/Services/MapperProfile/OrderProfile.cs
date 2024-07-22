@@ -17,7 +17,7 @@ namespace Application.Services.MapperProfile
             CreateMap<Order, OrderForView>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id))
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
-                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.LastName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.User.LastName))
                 .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems));
 
             CreateMap<OrderItem, OrderItemForView>()

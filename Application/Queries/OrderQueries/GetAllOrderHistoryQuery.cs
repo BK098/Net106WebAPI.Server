@@ -1,23 +1,27 @@
 ﻿using Application.Services.Contracts.Repositories;
 using Application.Services.Models.Base;
-using Application.Services.Models.ComboModels;
 using Application.Services.Models.OrderModels;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Queries.OrderQueries
 {
-    public record GetAllOrdersQuery(SearchBaseModel SearchModel) : IRequest<PaginatedList<OrderForView>> { }
-    public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, PaginatedList<OrderForView>>
+    public record GetOrdersHistoryQuery(SearchBaseModel SearchModel, AppUser User) : IRequest<PaginatedList<OrderForView>> { }
+    public class GetOrdersHistoryQueryHandler : IRequestHandler<GetOrdersHistoryQuery, PaginatedList<OrderForView>>
     {
         private readonly IOrderRepository _orderReponsitory;
-        private readonly ILogger<GetAllOrdersQueryHandler> _logger;
+        private readonly ILogger<GetOrdersHistoryQueryHandler> _logger;
         private readonly IMapper _mapper;
 
-        public GetAllOrdersQueryHandler(IOrderRepository orderReponsitory,
-            ILogger<GetAllOrdersQueryHandler> logger,
+        public GetOrdersHistoryQueryHandler(IOrderRepository orderReponsitory,
+            ILogger<GetOrdersHistoryQueryHandler> logger,
             IMapper mapper)
         {
             _orderReponsitory = orderReponsitory;
@@ -25,11 +29,11 @@ namespace Application.Queries.OrderQueries
             _mapper = mapper;
         }
 
-        public async Task<PaginatedList<OrderForView>> Handle(GetAllOrdersQuery orderDto, CancellationToken cancellationToken)
+        public async Task<PaginatedList<OrderForView>> Handle(GetOrdersHistoryQuery orderDto, CancellationToken cancellationToken)
         {
             try
             {
-                var combos = _orderReponsitory.GetAllOrders(orderDto.SearchModel, cancellationToken);
+                var combos = _orderReponsitory.GetAllOrdersHitory(orderDto.SearchModel, orderDto.User.Id,cancellationToken);
                 var paginatedCombos = await PaginatedList<Order>.CreateAsync(
                     combos,
                     orderDto.SearchModel.PageIndex,

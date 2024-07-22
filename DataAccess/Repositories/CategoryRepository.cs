@@ -49,7 +49,9 @@ namespace Repositories.Repositories
 
         public IQueryable<Category> GetAllCategories(SearchBaseModel model, CancellationToken cancellationToken)
         {
-            var categoryQuery = _context.Categories.AsNoTracking().AsQueryable();
+            var categoryQuery = _context.Categories
+                .Include(x => x.Products)                
+                .AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrEmpty(model.SearchTerm))
             {

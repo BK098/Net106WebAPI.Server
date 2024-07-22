@@ -5,34 +5,34 @@ namespace Application.Enums
     public enum ErrorCode
     {
         /// <summary>
-        /// Có vấn đề khi thực hiện {0}
+        /// Có vấn đề khi thực hiện { tên entity }
         /// </summary>
-        [Description("Có vấn đề khi thực hiện { entity }")]
+        [Description("Có vấn đề khi thực hiện {0}")]
         ValidationError,
         /// <summary>
-        /// Đã xảy ra lỗi khi tạo {0}
+        /// Đã xảy ra lỗi khi tạo { tên entity }
         /// </summary>
-        [Description("Đã xảy ra lỗi khi tạo { entity }")]
+        [Description("Đã xảy ra lỗi khi tạo {0}")]
         CreateError,
         /// <summary>
-        /// Đã xảy ra lỗi khi cập nhật {0}
+        /// Đã xảy ra lỗi khi cập nhật { tên entity}
         /// </summary>
-        [Description("Đã xảy ra lỗi khi cập nhật { entity }")]
+        [Description("Đã xảy ra lỗi khi cập nhật {0}")]
         UpdateError,
         /// <summary>
-        /// "Đã xảy ra lỗi khi xóa {0}
+        /// "Đã xảy ra lỗi khi xóa { tên entity }
         /// </summary>
-        [Description("Đã xảy ra lỗi khi xóa { entity }")]
+        [Description("Đã xảy ra lỗi khi xóa {0}")]
         DeleteError,
         /// <summary>
         /// { Tên entity } đã tồn tại
         /// </summary>
-        [Description("{ Tên entity } đã tồn tại")]
+        [Description("{0} đã tồn tại")]
         Existed,
         /// <summary>
         /// Không tìm thấy { với tên entity }
         /// </summary>
-        [Description("Không tìm thấy { entity }")]
+        [Description("Không tìm thấy {0}")]
         NotFound,
         /// <summary>
         /// Mật khẩu đã sai

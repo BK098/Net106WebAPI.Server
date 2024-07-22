@@ -49,14 +49,14 @@ namespace Application.Commands.AuthenticationCommands
             var validationResult = await _validatorRegister.ValidateAsync(model);
             if (!validationResult.IsValid)
             {
-                return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "Loại hàng");
+                return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "Đăng ký");
             }
             try
             {
                 var isMailExisted = await _userManager.FindByEmailAsync(model.Email);
                 if (isMailExisted != null)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Email");
+                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, "Email");
                 }
 
                 var user = _mapper.Map<AppUser>(model);
@@ -79,7 +79,7 @@ namespace Application.Commands.AuthenticationCommands
                         IsSuccess = true
                     };
                 }
-                return ResponseHelper.ErrorResponse(ErrorCode.ValidationError, validationResult.Errors, _localization, "Tài khoản");
+                return ResponseHelper.ErrorResponse(ErrorCode.ValidationError, "Tài khoản");
             }
             catch (Exception ex)
             {

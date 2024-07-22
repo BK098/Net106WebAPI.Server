@@ -298,7 +298,7 @@ namespace Persistence.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductItems");
+                    b.ToTable("ProductCombos");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductEntry", b =>

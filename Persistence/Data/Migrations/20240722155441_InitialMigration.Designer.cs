@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240715025125_InitialMigration_v1")]
-    partial class InitialMigration_v1
+    [Migration("20240722155441_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -301,7 +301,7 @@ namespace Persistence.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductItems");
+                    b.ToTable("ProductCombos");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductEntry", b =>

@@ -22,6 +22,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize("admin")]
         public async Task<IActionResult> GetAll([FromQuery] SearchBaseModel model)
         {
             var orders = new GetAllOrdersQuery(model);
@@ -29,7 +30,18 @@ namespace Presentation.Controllers
             return Ok(response);
         }
 
+        [HttpGet("history")]
+        [Authorize]
+        public async Task<IActionResult> GetOrderHistory([FromQuery] SearchBaseModel model)
+        {
+            var getUser = await _userManager.GetUserAsync(User);
+            var orders = new GetOrdersHistoryQuery(model, getUser);
+            var response = await _mediator.Send(orders);
+            return Ok(response);
+        }
+
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById(Guid id)
         {
             var order = new GetOrderByIdQuery(id);
@@ -58,6 +70,7 @@ namespace Presentation.Controllers
         }
        
         [HttpPut("{id}")]
+        [Authorize("admin")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOrderCommand orderDto)
         {
             orderDto.Id = id;

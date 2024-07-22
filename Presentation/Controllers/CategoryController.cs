@@ -2,6 +2,7 @@
 using Application.Queries.CategoryQueries;
 using Application.Services.Models.Base;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
@@ -35,6 +36,7 @@ namespace Presentation.Controllers
                 error => NotFound(response.AsT0));
         }
         [HttpPost]
+        [Authorize("admin")]
         public async Task<IActionResult> Create([FromBody] CreateCategoryCommand categoryDto)
         {
             var response = await _mediator.Send(categoryDto);
@@ -46,6 +48,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize("admin")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryCommand categoryDto)
         {
             categoryDto.Id = id;

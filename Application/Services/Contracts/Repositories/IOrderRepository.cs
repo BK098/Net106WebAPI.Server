@@ -12,5 +12,6 @@ namespace Application.Services.Contracts.Repositories
         Task<Order> GetOrderByIdAsync(Guid id);
         Task<bool> IsComboOrProductOrderExist(Guid? comboId, Guid? productId);
         IQueryable<Order> GetAllOrders(SearchBaseModel model, CancellationToken cancellationToken);
+        IQueryable<Order> GetAllOrdersHitory(SearchBaseModel model, string userId, CancellationToken cancellationToken);
     }
 }

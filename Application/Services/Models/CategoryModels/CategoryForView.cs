@@ -5,5 +5,6 @@ namespace Application.Services.Models.CategoryModels
     public class CategoryForView : CategoryBaseDto
     {
         public Guid Id { get; set; }
+        public int ProductCount { get; set; }
     }
 }

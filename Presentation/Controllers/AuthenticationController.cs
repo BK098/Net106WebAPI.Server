@@ -27,11 +27,11 @@ namespace Presentation.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterCommand model)
         {
             var response = await _mediator.Send(model);
-            /*if (response.IsSuccess)
+            if (response.IsSuccess)
             {
-            }*/
                 return Ok(response);
-            //return BadRequest(response);
+            }
+            return BadRequest(response);
         }
         [HttpPost("forgotpassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand model)

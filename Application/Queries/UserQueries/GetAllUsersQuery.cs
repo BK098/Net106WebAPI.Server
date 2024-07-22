@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.UserQueries
 {
-    public record GetAllUsersQuery(SearchBaseModel SearchModel) : IRequest<PaginatedList<UserForViewItems>>
+    public record GetAllUsersQuery(SearchBaseModel SearchModel) : IRequest<PaginatedList<UserForView>>
     {
     }
-    public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, PaginatedList<UserForViewItems>>
+    public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, PaginatedList<UserForView>>
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
@@ -31,28 +31,40 @@ namespace Application.Queries.UserQueries
             _logger = logger;
             _mapper = mapper;
         }
-        public async Task<PaginatedList<UserForViewItems>> Handle(GetAllUsersQuery userDto, CancellationToken cancellationToken)
+        public async Task<PaginatedList<UserForView>> Handle(GetAllUsersQuery userDto, CancellationToken cancellationToken)
         {   
             try
             {
-                var user = _userManager.Users.AsNoTracking().AsQueryable();
+                var usersQuery = _userManager.Users.AsNoTracking().AsQueryable();
                 if (!string.IsNullOrEmpty(userDto.SearchModel.SearchTerm))
                 {
-                    user = user.Where(p =>
+                    usersQuery = usersQuery.Where(p =>
                         p.FirstName.ToLower().Contains(userDto.SearchModel.SearchTerm.ToLower()) ||
                         p.LastName.ToLower().Contains(userDto.SearchModel.SearchTerm.ToLower()));
                 }
-                var paginatedUser = await PaginatedList<AppUser>.CreateAsync(
-                    user,
+
+                var paginatedUsers = await PaginatedList<AppUser>.CreateAsync(
+                    usersQuery,
                     userDto.SearchModel.PageIndex,
                     userDto.SearchModel.PageSize,
                     cancellationToken);
-                var items = new PaginatedList<UserForViewItems>(
-                    _mapper.Map<List<UserForViewItems>>(paginatedUser.Items),
+
+                var userForViewList = new List<UserForView>();
+
+                foreach (var user in paginatedUsers.Items)
+                {
+                    var roles = await _userManager.GetRolesAsync(user);
+                    var userForView = _mapper.Map<UserForView>(user);
+                    userForView.Role = roles.FirstOrDefault();
+                    userForViewList.Add(userForView);
+                }
+
+                var items = new PaginatedList<UserForView>(
+                    userForViewList,
                     userDto.SearchModel.PageIndex,
                     userDto.SearchModel.PageSize,
-                    paginatedUser.TotalCount);
-                
+                    paginatedUsers.TotalCount);
+
                 return items;
             }
             catch (Exception ex)

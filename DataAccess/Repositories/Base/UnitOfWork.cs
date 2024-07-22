@@ -10,16 +10,18 @@ namespace Repositories.Repositories.Base
         public IComboRepository Combo { get; }
         public IProductRepository Product { get; }
         public IOrderRepository Order { get; }
-
+        public ICategoryRepository Category { get; }
         public UnitOfWork(ApplicationDbContext context,
             IProductRepository product,
             IComboRepository combo,
-            IOrderRepository order)
+            IOrderRepository order,
+            ICategoryRepository category)
         {
             _context = context;
             Product = product;
             Combo = combo;
             Order = order;
+            Category = category;
         }
         public int SaveChanges()
         {
