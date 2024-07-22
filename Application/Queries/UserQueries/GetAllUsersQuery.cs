@@ -1,4 +1,5 @@
-﻿using Application.Services.Models.UserModels;
+﻿using Application.Services.Models.Base;
+using Application.Services.Models.UserModels;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -8,10 +9,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.UserQueries
 {
-    public class GetAllUsersQuery : UserForView, IRequest<UserForView>
+    public record GetAllUsersQuery(SearchBaseModel SearchModel) : IRequest<PaginatedList<UserForViewItems>>
     {
     }
-    public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, UserForView>
+    public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, PaginatedList<UserForViewItems>>
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
@@ -30,15 +31,29 @@ namespace Application.Queries.UserQueries
             _logger = logger;
             _mapper = mapper;
         }
-        public async Task<UserForView> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
-        {
+        public async Task<PaginatedList<UserForViewItems>> Handle(GetAllUsersQuery userDto, CancellationToken cancellationToken)
+        {   
             try
             {
-                IEnumerable<AppUser> users = await _userManager.Users.ToListAsync();
-                IList<UserForViewItems> items = _mapper.Map<IEnumerable<UserForViewItems>>(users).ToList();
-                UserForView responsse = new UserForView();
-                responsse.Users = items;
-                return responsse;
+                var user = _userManager.Users.AsNoTracking().AsQueryable();
+                if (!string.IsNullOrEmpty(userDto.SearchModel.SearchTerm))
+                {
+                    user = user.Where(p =>
+                        p.FirstName.ToLower().Contains(userDto.SearchModel.SearchTerm.ToLower()) ||
+                        p.LastName.ToLower().Contains(userDto.SearchModel.SearchTerm.ToLower()));
+                }
+                var paginatedUser = await PaginatedList<AppUser>.CreateAsync(
+                    user,
+                    userDto.SearchModel.PageIndex,
+                    userDto.SearchModel.PageSize,
+                    cancellationToken);
+                var items = new PaginatedList<UserForViewItems>(
+                    _mapper.Map<List<UserForViewItems>>(paginatedUser.Items),
+                    userDto.SearchModel.PageIndex,
+                    userDto.SearchModel.PageSize,
+                    paginatedUser.TotalCount);
+                
+                return items;
             }
             catch (Exception ex)
             {

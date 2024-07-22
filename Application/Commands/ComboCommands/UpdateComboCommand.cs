@@ -42,55 +42,60 @@ namespace Application.Commands.ComboCommands
             try
             {
                 Combo combo = await _unitOfWork.Combo.GetComboByIdAsync(comboDto.Id);
-                if (combo != null)
+                if (combo == null)
                 {
-                    if (comboDto.Name != combo.Name)
-                    {
-                        bool isComboExisted = await _unitOfWork.Combo.IsUniqueComboName(comboDto.Name);
-                        if (!isComboExisted)
-                        {
-                            return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Combo");
-                        }
-                    }
-
-                    combo.ProductCombos = combo.ProductCombos ?? new List<ProductCombo>();
-                    comboDto.ProductCombos = comboDto.ProductCombos ?? new List<ProductComboForUpdate>();
-
-                    var existingProductCombos = combo.ProductCombos;
-                    var updatedProductCombos = comboDto.ProductCombos;
-                    var productCombosToRemove = existingProductCombos.Where(pc => !updatedProductCombos.Any(upc => comboDto.Id == pc.ProductId)).ToList();
-
-                    foreach (var productCombo in productCombosToRemove)
-                    {
-                        combo.ProductCombos.Remove(productCombo);
-                    }
-
-                    foreach (var productComboDto in updatedProductCombos)
-                    {
-                        var product = await _unitOfWork.Product.GetProductByIdAsync(productComboDto.ProductId);
-                        if (product == null)
-                        {
-                            return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Product");
-                        }
-                        var existingProductCombo = combo.ProductCombos.FirstOrDefault(pc => pc.ProductId == comboDto.Id);
-                        if (existingProductCombo != null)
-                        {
-                            existingProductCombo.Quantity = productComboDto.Quantity;
-                        }
-                        else
-                        {
-                            var newProductCombo = _mapper.Map<ProductCombo>(productComboDto);
-                            combo.ProductCombos.Add(newProductCombo);
-                        }
-                    }
-
-                    _mapper.Map(comboDto, combo);
-                    _unitOfWork.Combo.UpdateCombo(combo);
-                    await _unitOfWork.SaveChangesAsync();
-
-                    return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Combo");
+                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound,"Combo");
                 }
-                return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Combo");
+                if (comboDto.Name != combo.Name)
+                {
+                    bool isComboExisted = await _unitOfWork.Combo.IsUniqueComboName(comboDto.Name);
+                    if (!isComboExisted)
+                    {
+                        return ResponseHelper.ErrorResponse(ErrorCode.Existed, $"Combo {comboDto.Name}");
+                    }
+                }
+
+                combo.ProductCombos = combo.ProductCombos ?? new List<ProductCombo>();
+                comboDto.ProductCombos = comboDto.ProductCombos ?? new List<ProductComboForUpdate>();
+
+                var existingProductCombos = combo.ProductCombos;
+                var updatedProductCombos = comboDto.ProductCombos;
+                var productCombosToRemove = existingProductCombos.Where(pc => !updatedProductCombos.Any(upc => comboDto.Id == pc.ProductId)).ToList();
+
+                foreach (var productCombo in productCombosToRemove)
+                {
+                    combo.ProductCombos.Remove(productCombo);
+                }
+
+                foreach (var productComboDto in updatedProductCombos)
+                {
+                    var product = await _unitOfWork.Product.GetProductByIdAsync(productComboDto.ProductId);
+                    if (product == null)
+                    {
+                        return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Product");
+                    }
+                    bool isProductInCombo = await _unitOfWork.Combo.IsProductComboExist(combo.Id, productComboDto?.ProductId);
+                    if (isProductInCombo)
+                    {
+                        return ResponseHelper.ErrorResponse(ErrorCode.Existed, $"Sản phẩm {product.Name}");
+                    }
+                    var existingProductCombo = combo.ProductCombos.FirstOrDefault(pc => pc.ProductId == comboDto.Id);
+                    if (existingProductCombo != null)
+                    {
+                        existingProductCombo.Quantity = productComboDto.Quantity;
+                    }
+                    else
+                    {
+                        var newProductCombo = _mapper.Map<ProductCombo>(productComboDto);
+                        combo.ProductCombos.Add(newProductCombo);
+                    }
+                }
+
+                _mapper.Map(comboDto, combo);
+                _unitOfWork.Combo.UpdateCombo(combo);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Combo");
             }
             catch (Exception ex)
             {

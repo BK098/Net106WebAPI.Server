@@ -1,5 +1,4 @@
-﻿
-using Application.Services.Contracts.Repositories.Base;
+﻿using Application.Services.Contracts.Repositories.Base;
 using Application.Services.Contracts.Repositories;
 using Application.Services.Contracts.Services.Base;
 using Application.Services.Models.Base;
@@ -12,6 +11,8 @@ using Application.Helpers;
 using Application.Enums;
 using Domain.Entities;
 using Domain.Enums;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Commands.OrderCommands
 {
@@ -23,6 +24,8 @@ namespace Application.Commands.OrderCommands
         private readonly IValidator<OrderForCreate> _validatorCreate;
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<AppUser> _userManager;
+
         private readonly ILogger<CreateOrderCommandHandler> _logger;
 
         public CreateOrderCommandHandler(IMapper mapper,
@@ -30,7 +33,8 @@ namespace Application.Commands.OrderCommands
             IValidator<OrderForCreate> validatorCreate,
             IOrderRepository orderRepository,
             IUnitOfWork unitOfWork,
-            ILogger<CreateOrderCommandHandler> logger)
+            ILogger<CreateOrderCommandHandler> logger,
+            UserManager<AppUser> userManager)
         {
             _mapper = mapper;
             _localization = localization;
@@ -38,6 +42,7 @@ namespace Application.Commands.OrderCommands
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _userManager = userManager;
         }
 
         public async Task<UserMangeResponse> Handle(CreateOrderCommand orderDto, CancellationToken cancellationToken)
@@ -49,11 +54,11 @@ namespace Application.Commands.OrderCommands
             }
             try
             {
+                var user = await _userManager.FindByIdAsync(orderDto.UserId.ToString());
 
                 Order order = _mapper.Map<Order>(orderDto);
                 order.OrderDate = DateTimeOffset.UtcNow;
                 order.Status = OrderStatus.Processing;
-                order.UserId = "3057932c-6849-40d1-bc8f-89b0f7d8472e";
                 order.OrderItems = _mapper.Map<ICollection<OrderItem>>(orderDto.OrderItems);
                 foreach (var orderItem in order.OrderItems)
                 {
@@ -78,9 +83,9 @@ namespace Application.Commands.OrderCommands
                 order.TotalAmount = order.OrderItems.Count > 0 ? order.OrderItems.Sum(x => x.TotalPrice) : 0;
 
                 await _unitOfWork.Order.CreateOrderAsync(order);
-                await _unitOfWork.Order.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
 
-                return ResponseHelper.SuccessResponse(SuccessCode.CreateSuccess, "sản phẩm");
+                return ResponseHelper.SuccessResponse(SuccessCode.CreateSuccess, "order");
             }
             catch (Exception ex)
             {

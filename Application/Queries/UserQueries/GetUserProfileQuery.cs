@@ -8,10 +8,8 @@ using System.Text.Json.Serialization;
 
 namespace Application.Queries.UserQueries
 {
-    public class GetUserProfileQuery : UserForViewItems, IRequest<UserForViewItems>
+    public record GetUserProfileQuery(AppUser User) : IRequest<UserForViewItems>
     {
-        [JsonIgnore]
-        public AppUser User { get; set; }
     }
     public class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, UserForViewItems>
     {

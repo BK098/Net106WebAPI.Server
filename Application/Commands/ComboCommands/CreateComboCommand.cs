@@ -33,47 +33,46 @@ namespace Application.Commands.ComboCommands
             _logger = logger;
             _unitOfWork = unitOfWork;
         }
-        public async Task<UserMangeResponse> Handle(CreateComboCommand request, CancellationToken cancellationToken)
+        public async Task<UserMangeResponse> Handle(CreateComboCommand comboDto, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorCreate.ValidateAsync(request);
+            var validationResult = await _validatorCreate.ValidateAsync(comboDto);
             if (!validationResult.IsValid)
             {
                 return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "Combo");
             }
             try
             { 
-                bool isComboExisted = await _unitOfWork.Combo.IsUniqueComboName(request.Name);
+                bool isComboExisted = await _unitOfWork.Combo.IsUniqueComboName(comboDto.Name);
                 if (!isComboExisted)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Combo");
+                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, $"Combo {comboDto.Name}");
                 }
 
-                Combo combo = _mapper.Map<Combo>(request);
-                combo.ProductCombos = _mapper.Map<ICollection<ProductCombo>>(request.ProductCombos);
+                Combo combo = _mapper.Map<Combo>(comboDto);
+                combo.ProductCombos = _mapper.Map<ICollection<ProductCombo>>(comboDto.ProductCombos);
 
-                foreach (var productCombo in combo.ProductCombos)
+                foreach (var productComboDto in combo.ProductCombos)
                 {
-                    var product = await _unitOfWork.Product.GetProductByIdAsync(productCombo.ProductId.Value);
+                    var product = await _unitOfWork.Product.GetProductByIdAsync(productComboDto.ProductId.Value);
                     if (product == null)
                     {
-                        return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Product");
+                        return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "sản phẩm");
                     }
-
-                    bool isProductInCombo = await _unitOfWork.Combo.IsProductComboExist(combo.Id, productCombo?.ProductId);
+                    bool isProductInCombo = await _unitOfWork.Combo.IsProductComboExist(combo.Id, productComboDto?.ProductId);
                     if (isProductInCombo)
                     {
-                        return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "ProductCombo");
+                        return ResponseHelper.ErrorResponse(ErrorCode.Existed, $"Sản phẩm {product.Name}");
                     }
                 }
                 await _unitOfWork.Combo.CreateComboAsync(combo);
-                await _unitOfWork.Combo.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
 
                 return ResponseHelper.SuccessResponse(SuccessCode.CreateSuccess, "Combo");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                throw new NullReferenceException(nameof(Handle));
+                return ResponseHelper.ErrorResponse(ErrorCode.OperationFailed, validationResult.Errors, _localization, "Combo");
             }
         }
     }

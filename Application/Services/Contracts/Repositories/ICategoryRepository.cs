@@ -1,4 +1,6 @@
 ﻿using Application.Services.Contracts.Repositories.Base;
+using Application.Services.Models.Base;
+using Application.Services.Models.CategoryModels;
 using Domain.Entities;
 
 namespace Application.Services.Contracts.Repositories
@@ -8,8 +10,9 @@ namespace Application.Services.Contracts.Repositories
         Task<Category> CreateCategoryAsync(Category category);
         Category UpdateCategory(Category category);
         bool DeleteCategory(Category category);
-        Task<IEnumerable<Category>> GetAllCategorys();
         Task<Category> GetCategoryByIdAsync(Guid id);
         Task<bool> IsUniqueCategoryName(string name);
+        Task<IEnumerable<Category>> GetAllCategories();
+        IQueryable<Category> GetAllCategories(SearchBaseModel model, CancellationToken cancellationToken);
     }
 }

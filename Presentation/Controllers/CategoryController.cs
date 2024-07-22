@@ -1,11 +1,12 @@
 ﻿using Application.Commands.CategoryCommands;
 using Application.Queries.CategoryQueries;
+using Application.Services.Models.Base;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -15,30 +16,45 @@ namespace Presentation.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] SearchBaseModel model)
+        {
+            var categories= new GetAllCategoriesQuery(model);
+            var response = await _mediator.Send(categories);
+
+            return Ok(response);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var category = new GetCategoryByIdQuery(id);
+            var response = await _mediator.Send(category);
+            return response.Match<IActionResult>(
+                _ => Ok(response.AsT1),
+                error => NotFound(response.AsT0));
+        }
         [HttpPost]
-        public async Task<IActionResult> CreateCategoryAsync([FromBody] CreateCategoryCommand categoryDto)
+        public async Task<IActionResult> Create([FromBody] CreateCategoryCommand categoryDto)
         {
             var response = await _mediator.Send(categoryDto);
-            return Ok(response);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
-        [HttpGet]
-        public async Task<IActionResult> GetCategoriesAsync()
-        {
-            var response = await _mediator.Send(new GetAllCategoriresQuery());
-            return Ok(response);
-        }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var category = await _mediator.Send(new GetCategoryByIdQuery() { Id = id });
-            return Ok(category);
-        }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] UpdateCategoryCommand categoryDto)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryCommand categoryDto)
         {
             categoryDto.Id = id;
             var response = await _mediator.Send(categoryDto);
-            return Ok(response);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
     }
 }

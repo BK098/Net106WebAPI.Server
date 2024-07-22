@@ -13,9 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.AuthenticationCommands
 {
-    public class RegisterCommand : RegisterModel, IRequest<UserMangeResponse>
-    {
-    }
+    public class RegisterCommand : RegisterModel, IRequest<UserMangeResponse> { }
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, UserMangeResponse>
     {
         private readonly IValidator<RegisterModel> _validatorRegister;
@@ -60,7 +58,7 @@ namespace Application.Commands.AuthenticationCommands
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "Email");
                 }
-                
+
                 var user = _mapper.Map<AppUser>(model);
                 user.UserName = model.Email;
 

@@ -41,7 +41,7 @@ namespace Application.Commands.CategoryCommands
                 bool isCategoryExisted = await _categoryRepository.IsUniqueCategoryName(request.Name);
                 if (!isCategoryExisted)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "loại hàng");
+                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, $"Loại hàng {request.Name}");
                 }
                 Category category = _mapper.Map<Category>(request);
                 await _categoryRepository.CreateCategoryAsync(category);

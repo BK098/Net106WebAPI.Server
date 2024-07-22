@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Persistence.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Init_v1 : Migration
+    public partial class InitialMigration_v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -211,7 +211,7 @@ namespace Persistence.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     OrderDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     TotalAmount = table.Column<double>(type: "double precision", nullable: false),
-                    OrderStatus = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>

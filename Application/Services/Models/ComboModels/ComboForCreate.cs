@@ -1,8 +1,5 @@
-﻿using Application.Services.Contracts.Repositories;
-using Application.Services.Models.ComboModels;
-using Application.Services.Models.ComboModels.Base;
+﻿using Application.Services.Models.ComboModels.Base;
 using FluentValidation;
-using FluentValidation.Validators;
 
 namespace Application.Services.Models.ComboModels
 {

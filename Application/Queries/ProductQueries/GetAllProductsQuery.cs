@@ -1,5 +1,6 @@
 ﻿using Application.Services.Contracts.Repositories;
 using Application.Services.Contracts.Services.Base;
+using Application.Services.Models.Base;
 using Application.Services.Models.ProductModels;
 using AutoMapper;
 using Domain.Entities;
@@ -8,8 +9,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.ProductQueries
 {
-    public class GetAllProductsQuery : ProductForView, IRequest<ProductForView> { }
-    public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, ProductForView>
+    public record GetAllProductsQuery(SearchBaseModel SearchModel) : IRequest<PaginatedList<ProductForView>> { }
+    public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, PaginatedList<ProductForView>>
     {
         private readonly IMapper _mapper;
         private readonly ILocalizationMessage _localization;
@@ -25,15 +26,28 @@ namespace Application.Queries.ProductQueries
             _productRepository = repository;
             _logger = logger;
         }
-        public async Task<ProductForView> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<ProductForView>> Handle(GetAllProductsQuery productDto, CancellationToken cancellationToken)
         {
             try
             {
-                IEnumerable<Product> products = await _productRepository.GetAllProducts();
-                IList<ProductForViewItems> items = _mapper.Map<IEnumerable<ProductForViewItems>>(products).ToList();
-                ProductForView response = new ProductForView();
-                response.Products = items;
-                return response;
+                var products =  _productRepository.GetAllProducts(productDto.SearchModel, cancellationToken);
+                var paginatedCategories = await PaginatedList<Product>.CreateAsync(
+                    products,
+                    productDto.SearchModel.PageIndex,
+                    productDto.SearchModel.PageSize,
+                    cancellationToken);
+
+                var items = new PaginatedList<ProductForView>(
+                    _mapper.Map<List<ProductForView>>(paginatedCategories.Items),
+                    productDto.SearchModel.PageIndex,
+                    productDto.SearchModel.PageSize,
+                    paginatedCategories.TotalCount);
+
+                if (items == null)
+                {
+
+                }
+                return items;
             }
             catch (Exception ex)
             {

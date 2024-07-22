@@ -1,13 +1,8 @@
-﻿
-using Application.Services.Models.ComboModels.Base;
+﻿using Application.Services.Models.ComboModels.Base;
 
 namespace Application.Services.Models.ComboModels
 {
-    public class ComboForView
-    {
-        public IList<ComboForViewItems> Combos { get; set; } = new List<ComboForViewItems>();
-    }
-    public class ComboForViewItems : ComboBaseDto
+    public class ComboForView : ComboBaseDto
     {
         public Guid Id { get; set; }
         public IList<ProductComboForView> ProductCombos { get; set; } = new List<ProductComboForView>();

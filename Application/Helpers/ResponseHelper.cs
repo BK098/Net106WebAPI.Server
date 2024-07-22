@@ -15,7 +15,7 @@ namespace Application.Helpers
            ILocalizationMessage localization,
            string entityName = "")
         {
-            string message = entityName == string.Empty ? errorCode.GetDescription() : errorCode.GetDescription(entityName);
+            string message = string.IsNullOrEmpty(entityName) ? errorCode.GetDescription() : errorCode.GetDescription(entityName);
             return new UserMangeResponse
             {
                 Message = message,
@@ -28,7 +28,7 @@ namespace Application.Helpers
            ErrorCode errorCode,
            string entityName = "")
         {
-            string message = entityName == string.Empty ? errorCode.GetDescription() : errorCode.GetDescription(entityName);
+            string message = string.IsNullOrEmpty(entityName) ? errorCode.GetDescription() : errorCode.GetDescription(entityName);
             return new UserMangeResponse
             {
                 Message = message,

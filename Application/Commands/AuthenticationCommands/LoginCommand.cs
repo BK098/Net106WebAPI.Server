@@ -46,19 +46,19 @@ namespace Application.Commands.AuthenticationCommands
             var validationResult = await _validatorLogin.ValidateAsync(model);
             if (!validationResult.IsValid)
             {
-                return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "Loại hàng");
+                return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "User");
             }
             try
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user == null)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Email");
+                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "Email");
                 }
                 var result = await _userManager.CheckPasswordAsync(user, model.Password);
                 if (!result)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.WrongPassword, validationResult.Errors, _localization, "");
+                    return ResponseHelper.ErrorResponse(ErrorCode.WrongPassword, "Password");
                 }
 
                 var claims = new List<Claim>

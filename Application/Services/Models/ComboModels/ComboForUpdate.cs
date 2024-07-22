@@ -1,5 +1,4 @@
-﻿using Application.Services.Contracts.Repositories;
-using Application.Services.Models.ComboModels.Base;
+﻿using Application.Services.Models.ComboModels.Base;
 using FluentValidation;
 using System.Text.Json.Serialization;
 

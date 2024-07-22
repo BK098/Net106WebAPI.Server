@@ -1,15 +1,15 @@
 ﻿using Application.Commands.UserCommands;
 using Application.Queries.UserQueries;
+using Application.Services.Models.Base;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OneOf.Types;
 
 namespace Presentation.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -22,16 +22,21 @@ namespace Presentation.Controllers
             _mediator = mediator;
             _userManager = userManager;
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAll([FromQuery] SearchBaseModel model)
         {
-            var response = await _mediator.Send(new GetAllUsersQuery());
+            var users = new GetAllUsersQuery(model);
+            var response = await _mediator.Send(users);
             return Ok(response);
         }
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(string id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var response = await _mediator.Send(new GetUserByIdQuery() { Id = id });
+            var user = new GetUserByIdQuery(id);
+            var response = await _mediator.Send(user);
+
             return response.Match<IActionResult>(
                 _ => Ok(response.AsT0),
                 notFound => NotFound(response.AsT1)
@@ -41,12 +46,13 @@ namespace Presentation.Controllers
         [Authorize]
         public async Task<IActionResult> GetUserProfile()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            var getUser = await _userManager.GetUserAsync(User);
+            if (getUser == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Unable to load getUser with ID '{_userManager.GetUserId(User)}'.");
             }
-            var response = await _mediator.Send(new GetUserProfileQuery() { User = user });
+            var user = new GetUserProfileQuery(getUser);
+            var response = await _mediator.Send(user);
             return Ok(response);
         }
         [HttpPost("profile")]
@@ -56,7 +62,7 @@ namespace Presentation.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Unable to load getUser with ID '{_userManager.GetUserId(User)}'.");
             }
             userDto.User = user;
             var response = await _mediator.Send(userDto);
@@ -73,7 +79,7 @@ namespace Presentation.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Unable to load getUser with ID '{_userManager.GetUserId(User)}'.");
             }
             userDto.User = user;
 

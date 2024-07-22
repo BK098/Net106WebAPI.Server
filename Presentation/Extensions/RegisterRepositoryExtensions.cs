@@ -11,9 +11,7 @@ namespace Presentation.Extensions
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProductRepository, ProductRepository>();
-
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-
             services.AddScoped<IComboRepository, ComboRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             return services;

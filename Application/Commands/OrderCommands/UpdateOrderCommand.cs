@@ -45,12 +45,13 @@ namespace Application.Commands.OrderCommands
                 var order = await _unitOfWork.Order.GetOrderByIdAsync(orderDto.Id);
                 if (order == null)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Order");
+                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "Order");
                 }
                 order.OrderDate = orderDto.OrderDate;
                 order.Status = orderDto.Status;
+
                 await _unitOfWork.Order.UpdateOrder(order);
-                await _unitOfWork.Order.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
                 return ResponseHelper.SuccessResponse(SuccessCode.UpdateSuccess, "Order");
 
             }

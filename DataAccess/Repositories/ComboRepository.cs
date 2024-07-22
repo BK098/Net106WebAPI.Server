@@ -1,8 +1,10 @@
 ﻿using Application.Services.Contracts.Repositories;
+using Application.Services.Models.Base;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Repositories.Repositories.Base;
+using System.Linq.Expressions;
 
 namespace Repositories.Repositories
 {
@@ -28,7 +30,8 @@ namespace Repositories.Repositories
         #region Queries
         public async Task<bool> IsUniqueComboName(string name)
         {
-            var combo = await _context.Combos.FirstOrDefaultAsync(p => p.Name == name);
+            var combo = await _context.Combos
+                .FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower());
             return combo == null;
         }
         public async Task<bool> IsProductComboExist(Guid comboId, Guid? productId)
@@ -52,6 +55,40 @@ namespace Repositories.Repositories
                 .Include(x => x.ProductCombos)
                 .ThenInclude(x => x.Product)
                 .SingleOrDefaultAsync(x => x.Id == id);
+        }
+        public IQueryable<Combo> GetAllCombosAsync(SearchBaseModel model, CancellationToken cancellationToken)
+        {
+            var comboQuery = _context.Combos.AsNoTracking().AsQueryable();
+            if (!string.IsNullOrEmpty(model.SearchTerm))
+            {
+                comboQuery = comboQuery.Where(p =>
+                    p.Name.ToLower().Contains(model.SearchTerm.ToLower()));
+            }
+
+            if (model.SortOrder?.ToLower() == "desc")
+            {
+                comboQuery = comboQuery.OrderByDescending(GetSortProperty(model.SortColumn));
+            }
+            else
+            {
+                comboQuery = comboQuery.OrderBy(GetSortProperty(model.SortColumn));
+            }
+
+            return comboQuery;
+        }
+        private static Expression<Func<Combo, object>> GetSortProperty(string? sortColumn)
+        {
+            if (string.IsNullOrEmpty(sortColumn))
+            {
+                return combo => combo.Id;
+            }
+            return sortColumn?.ToLower() switch
+            {
+                "name" => combo => combo.Name,
+                "price" => combo => combo.Price,
+                "discount" => combo => combo.Discount,
+                _ => combo => combo.Id
+            };
         }
         #endregion
     }

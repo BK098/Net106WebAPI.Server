@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 
 namespace Application.Queries.UserQueries
 {
-    public class GetUserByIdQuery : UserForViewItems, IRequest<OneOf<UserForViewItems, UserMangeResponse>> { }
+    public record GetUserByIdQuery(Guid id) : IRequest<OneOf<UserForViewItems, UserMangeResponse>> { }
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, OneOf<UserForViewItems, UserMangeResponse>>
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -36,7 +36,7 @@ namespace Application.Queries.UserQueries
         {
             try
             {
-                AppUser user = await _userManager.FindByIdAsync(request.Id);
+                AppUser user = await _userManager.FindByIdAsync(request.id.ToString());
                 if (user == null)
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "User");

@@ -12,34 +12,30 @@ using OneOf;
 
 namespace Application.Queries.OrderQueries
 {
-    public class GetOrderByIdQuery : OrderForViewItems, IRequest<OneOf<UserMangeResponse,OrderForViewItems>> { }
-    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, OneOf<UserMangeResponse, OrderForViewItems>>
+    public record GetOrderByIdQuery(Guid id) : IRequest<OneOf<UserMangeResponse, OrderForView>> { }
+    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, OneOf<UserMangeResponse, OrderForView>>
     {
         private readonly IMapper _mapper;
-        private readonly ILocalizationMessage _localization;
         private readonly IOrderRepository _orderRepository;
         private readonly ILogger<GetOrderByIdQueryHandler> _logger;
         public GetOrderByIdQueryHandler(IMapper mapper,
-            ILocalizationMessage localization,
             IOrderRepository repository,
             ILogger<GetOrderByIdQueryHandler> logger)
         {
             _mapper = mapper;
-            _localization = localization;
             _orderRepository = repository;
             _logger = logger;
         }
-        public async Task<OneOf<UserMangeResponse, OrderForViewItems>> Handle(GetOrderByIdQuery orderDto, CancellationToken cancellationToken)
+        public async Task<OneOf<UserMangeResponse, OrderForView>> Handle(GetOrderByIdQuery orderDto, CancellationToken cancellationToken)
         {
-
             try
             {
-                Order order = await _orderRepository.GetOrderByIdAsync(orderDto.Id);
+                Order order = await _orderRepository.GetOrderByIdAsync(orderDto.id);
                 if (order == null)
                 {
-                    //return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Order");
+                    return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "Order");
                 }
-                OrderForViewItems item = _mapper.Map<OrderForViewItems>(order);
+                OrderForView item = _mapper.Map<OrderForView>(order);
                 return item;
             }
             catch (Exception ex)

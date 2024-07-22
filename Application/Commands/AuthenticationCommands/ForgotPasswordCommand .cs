@@ -49,7 +49,7 @@ namespace Application.Commands.AuthenticationCommands
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                return ResponseHelper.ErrorResponse(ErrorCode.NotFound, validationResult.Errors, _localization, "Email");
+                return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "Email");
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);

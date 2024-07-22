@@ -33,21 +33,21 @@ namespace Application.Commands.ProductCommands
             _productRepository = repository;
         }
 
-        public async Task<UserMangeResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public async Task<UserMangeResponse> Handle(CreateProductCommand productDto, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorCreate.ValidateAsync(request);
+            var validationResult = await _validatorCreate.ValidateAsync(productDto);
             if (!validationResult.IsValid)
             {
                 return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "sản phẩm");
             }
             try
             {
-                bool isProductExisted = await _productRepository.IsUniqueProductName(request.Name);
+                bool isProductExisted = await _productRepository.IsUniqueProductName(productDto.Name);
                 if (!isProductExisted)
                 {
-                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, validationResult.Errors, _localization, "sản phẩm");
+                    return ResponseHelper.ErrorResponse(ErrorCode.Existed, $"Sản phẩm {productDto.Name}");
                 }
-                Product product = _mapper.Map<Product>(request);
+                Product product = _mapper.Map<Product>(productDto);
                 product.DateAdded = DateTimeOffset.UtcNow;
 
                 await _productRepository.CreateProductAsync(product);

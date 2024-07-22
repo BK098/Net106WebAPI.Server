@@ -1,5 +1,4 @@
-﻿
-using Application.Services.Contracts.Repositories;
+﻿using Application.Services.Contracts.Repositories;
 using Application.Services.Contracts.Repositories.Base;
 using Persistence;
 

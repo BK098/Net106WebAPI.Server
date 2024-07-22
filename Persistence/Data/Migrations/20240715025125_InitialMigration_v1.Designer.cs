@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240713100946_Init_v1")]
-    partial class Init_v1
+    [Migration("20240715025125_InitialMigration_v1")]
+    partial class InitialMigration_v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -185,9 +185,8 @@ namespace Persistence.Data.Migrations
                     b.Property<DateTimeOffset>("OrderDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("OrderStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<double>("TotalAmount")
                         .HasColumnType("double precision");

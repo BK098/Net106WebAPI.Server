@@ -7,10 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Services\Models\Base\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.7" />
