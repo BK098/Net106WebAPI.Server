@@ -31,8 +31,8 @@ namespace Presentation.Controllers
             var combo = new GetComboByIdQuery(id);
             var response = await _mediator.Send(combo);
             return response.Match<IActionResult>(
-                _ => Ok(response.AsT1),
-                error => NotFound(response.AsT0));
+                 _ => Ok(response.AsT0),
+                 error => NotFound(response.AsT1));
         }
 
         [HttpPost]

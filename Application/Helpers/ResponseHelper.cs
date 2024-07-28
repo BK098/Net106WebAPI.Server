@@ -23,7 +23,7 @@ namespace Application.Helpers
                 Errors = localization.GetMessageError(new Dictionary<string, List<object>>(), validationErrors),
                 IsSuccess = false
             };
-        }
+        } 
         public static UserMangeResponse ErrorResponse(
            ErrorCode errorCode,
            string entityName = "")

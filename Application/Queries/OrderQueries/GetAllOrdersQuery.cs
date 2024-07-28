@@ -20,7 +20,7 @@ namespace Application.Queries.OrderQueries
             ILogger<GetAllOrdersQueryHandler> logger,
             IMapper mapper)
         {
-            _orderReponsitory = orderReponsitory;
+            _orderReponsitory = orderReponsitory;            
             _logger = logger;
             _mapper = mapper;
         }

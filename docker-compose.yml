@@ -10,6 +10,7 @@ services:
       PGDATA: /data/postgres
     volumes:
        - postgres:/data/postgres
+       - ./backup:/backup
     ports:
        - "5434:5432"
     networks:

@@ -65,7 +65,7 @@ namespace Application.Commands.AuthenticationCommands
                 {
                     new Claim("Id", user.Id),
                     //new Claim("Email", model.Email),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id)
+                    new Claim(ClaimTypes.NameIdentifier, user.Id)   
                 };
 
                 var roles = await _signInManager.UserManager.GetRolesAsync(user);

@@ -11,8 +11,8 @@ using OneOf;
 
 namespace Application.Queries.CategoryQueries
 {
-    public record GetCategoryByIdQuery(Guid id) : IRequest<OneOf<UserMangeResponse, CategoryForView>> { }
-    public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, OneOf<UserMangeResponse, CategoryForView>>
+    public record GetCategoryByIdQuery(Guid id) : IRequest<OneOf<CategoryForView, UserMangeResponse>> { }
+    public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, OneOf<CategoryForView, UserMangeResponse>>
     {
         private readonly IMapper _mapper;
         private readonly ICategoryRepository _categoryRepository;
@@ -25,11 +25,11 @@ namespace Application.Queries.CategoryQueries
             _categoryRepository = repository;
             _logger = logger;
         }
-        public async Task<OneOf<UserMangeResponse, CategoryForView>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
+        public async Task<OneOf<CategoryForView, UserMangeResponse>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                Category category = await _categoryRepository.GetCategoryByIdAsync(request.id);
+                var category = await _categoryRepository.GetCategoryByIdAsync(request.id);
                 if (category == null)
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "Loại hàng");
