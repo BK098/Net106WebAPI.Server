@@ -12,8 +12,8 @@ using OneOf;
 
 namespace Application.Queries.ComboQueries
 {
-    public record GetComboByIdQuery(Guid id) : IRequest<OneOf<UserMangeResponse, ComboForView>> { }
-    public class GetComboByIdQueryHandler : IRequestHandler<GetComboByIdQuery, OneOf<UserMangeResponse, ComboForView>>
+    public record GetComboByIdQuery(Guid id) : IRequest<OneOf<ComboForView, UserMangeResponse>> { }
+    public class GetComboByIdQueryHandler : IRequestHandler<GetComboByIdQuery, OneOf<ComboForView, UserMangeResponse>>
     {
         private readonly IMapper _mapper;
         private readonly ILocalizationMessage _localization;
@@ -29,11 +29,11 @@ namespace Application.Queries.ComboQueries
             _comboRepository = repository;
             _logger = logger;
         }
-        public async Task<OneOf<UserMangeResponse, ComboForView>> Handle(GetComboByIdQuery request, CancellationToken cancellationToken)
+        public async Task<OneOf<ComboForView, UserMangeResponse>> Handle(GetComboByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                Combo combo = await _comboRepository.GetComboByIdAsync(request.id);
+                var combo = await _comboRepository.GetComboByIdAsync(request.id);
                 if (combo == null)
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "combo");

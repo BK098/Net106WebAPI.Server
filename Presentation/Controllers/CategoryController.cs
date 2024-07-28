@@ -26,17 +26,18 @@ namespace Presentation.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")] 
+
         public async Task<IActionResult> GetById(Guid id)
         {
             var category = new GetCategoryByIdQuery(id);
             var response = await _mediator.Send(category);
             return response.Match<IActionResult>(
-                _ => Ok(response.AsT1),
-                error => NotFound(response.AsT0));
+                _ => Ok(response.AsT0),
+                error => NotFound(response.AsT1));
         }
         [HttpPost]
-        [Authorize("admin")]
+        //[Authorize("admin")]
         public async Task<IActionResult> Create([FromBody] CreateCategoryCommand categoryDto)
         {
             var response = await _mediator.Send(categoryDto);
@@ -48,7 +49,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize("admin")]
+        //[Authorize("admin")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryCommand categoryDto)
         {
             categoryDto.Id = id;

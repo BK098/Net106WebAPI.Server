@@ -41,8 +41,7 @@ namespace Presentation.Controllers
 
             return response.Match<IActionResult>(
                 _ => Ok(response.AsT0),
-                notFound => NotFound(response.AsT1)
-                );
+                notFound => NotFound(response.AsT1));
         }
         [HttpGet("profile")]
         [Authorize]

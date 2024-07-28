@@ -11,8 +11,8 @@ using OneOf;
 
 namespace Application.Queries.ProductQueries
 {
-    public record GetProductByIdQuery(Guid id) : IRequest<OneOf<UserMangeResponse, ProductForView>> { }
-    public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, OneOf<UserMangeResponse, ProductForView>>
+    public record GetProductByIdQuery(Guid id) : IRequest<OneOf<ProductForView, UserMangeResponse>> { }
+    public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, OneOf<ProductForView, UserMangeResponse>>
     {
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
@@ -25,11 +25,11 @@ namespace Application.Queries.ProductQueries
             _productRepository = repository;
             _logger = logger;
         }
-        public async Task<OneOf<UserMangeResponse, ProductForView>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+        public async Task<OneOf<ProductForView, UserMangeResponse>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                Product product = await _productRepository.GetProductByIdAsync(request.id);
+                var product = await _productRepository.GetProductByIdAsync(request.id);
                 if (product == null)
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "sản phẩm");

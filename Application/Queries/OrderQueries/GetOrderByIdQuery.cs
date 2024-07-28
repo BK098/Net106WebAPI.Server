@@ -12,8 +12,8 @@ using OneOf;
 
 namespace Application.Queries.OrderQueries
 {
-    public record GetOrderByIdQuery(Guid id) : IRequest<OneOf<UserMangeResponse, OrderForView>> { }
-    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, OneOf<UserMangeResponse, OrderForView>>
+    public record GetOrderByIdQuery(Guid id) : IRequest<OneOf<OrderForView, UserMangeResponse>> { }
+    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, OneOf<OrderForView, UserMangeResponse>>
     {
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
@@ -26,11 +26,11 @@ namespace Application.Queries.OrderQueries
             _orderRepository = repository;
             _logger = logger;
         }
-        public async Task<OneOf<UserMangeResponse, OrderForView>> Handle(GetOrderByIdQuery orderDto, CancellationToken cancellationToken)
+        public async Task<OneOf<OrderForView, UserMangeResponse>> Handle(GetOrderByIdQuery orderDto, CancellationToken cancellationToken)
         {
             try
             {
-                Order order = await _orderRepository.GetOrderByIdAsync(orderDto.id);
+                var order = await _orderRepository.GetOrderByIdAsync(orderDto.id);
                 if (order == null)
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "Order");
