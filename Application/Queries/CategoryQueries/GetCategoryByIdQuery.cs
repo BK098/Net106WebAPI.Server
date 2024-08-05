@@ -36,6 +36,7 @@ namespace Application.Queries.CategoryQueries
 
                 }
                 CategoryForView item = _mapper.Map<CategoryForView>(category);
+
                 return item;
             }
             catch (Exception ex)

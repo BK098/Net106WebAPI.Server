@@ -73,7 +73,7 @@ namespace Presentation.Controllers
             }
             return BadRequest(response);
         }
-        [HttpPost("role")]
+        [HttpPut("role")]
         [Authorize("admin")]
         public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleCommand userDto)
         {
@@ -83,7 +83,7 @@ namespace Presentation.Controllers
                 return NotFound($"Unable to load getUser with ID '{_userManager.GetUserId(User)}'.");
             }
             userDto.User = user;
-
+            UpdateUserRoleCommand usersDto = new UpdateUserRoleCommand();
             var response = await _mediator.Send(userDto);
             if (response.IsSuccess)
             {
