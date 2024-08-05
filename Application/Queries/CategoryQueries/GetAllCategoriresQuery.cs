@@ -29,6 +29,7 @@ namespace Application.Queries.CategoryQueries
             try
             {
                 var categories = _categoryRepository.GetAllCategories(categoryDto.SearchModel, cancellationToken);
+
                 var paginatedCategories = await PaginatedList<Category>.CreateAsync(
                     categories,
                     categoryDto.SearchModel.PageIndex,
