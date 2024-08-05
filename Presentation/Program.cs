@@ -16,7 +16,7 @@ builder.Services.AddControllers();
 //Register SQL (PostgreSQL)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("KhangConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("VuConnection2"));
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()

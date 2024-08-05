@@ -41,32 +41,32 @@ namespace Application.Commands.UserCommands
             _validatorUpdate = validatorUpdate;
             _localization = localization;
         }
-        public async Task<UserMangeResponse> Handle(UpdateUserProfileCommand request, CancellationToken cancellationToken)
+        public async Task<UserMangeResponse> Handle(UpdateUserProfileCommand userDto, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorUpdate.ValidateAsync(request);
+            var validationResult = await _validatorUpdate.ValidateAsync(userDto);
             if (!validationResult.IsValid)
             {
                 return ResponseHelper.ErrorResponse(ErrorCode.CreateError, validationResult.Errors, _localization, "người dùng");
             }
             try
             {
-                AppUser user = await _userManager.FindByIdAsync(request.User.Id);
+                AppUser user = await _userManager.FindByIdAsync(userDto.User.Id);
                 if (user == null)
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "người dùng");
                 }
                 var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-                if (request.User.PhoneNumber != phoneNumber)
+                if (userDto.User.PhoneNumber != phoneNumber)
                 {
-                    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, request.PhoneNumber);
+                    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, userDto.PhoneNumber);
                     if (!setPhoneResult.Succeeded)
                     {
                         return ResponseHelper.ErrorResponse(ErrorCode.ValidationError, "số điện thoại");
                     }
                 }
 
-                user.UserName = request.User.Email;
-                _mapper.Map(request, user);
+               /* user.UserName = userDto.User.Email;*/
+                _mapper.Map(userDto, user);
 
                 var result = await _userManager.UpdateAsync(user);
                 if (!result.Succeeded)

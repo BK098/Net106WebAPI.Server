@@ -40,7 +40,7 @@ namespace Repositories.Repositories
         {
             return await _context.Categories
                 .Include(p => p.Products)
-                .SingleOrDefaultAsync(p => p.Id == id);
+                .SingleOrDefaultAsync(p => p.Id == id && !p.IsDeleted.HasValue || !p.IsDeleted.Value);
         }
         public async Task<IEnumerable<Category>> GetAllCategories()
         {
@@ -50,6 +50,7 @@ namespace Repositories.Repositories
         public IQueryable<Category> GetAllCategories(SearchBaseModel model, CancellationToken cancellationToken)
         {
             var categoryQuery = _context.Categories
+                .Where(c => !c.IsDeleted.HasValue || !c.IsDeleted.Value)
                 .Include(x => x.Products)                
                 .AsNoTracking().AsQueryable();
 

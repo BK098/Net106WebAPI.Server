@@ -8,7 +8,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using OneOf;
-using System.Text.Json.Serialization;
 
 namespace Application.Queries.UserQueries
 {
@@ -41,7 +40,9 @@ namespace Application.Queries.UserQueries
                 {
                     return ResponseHelper.ErrorResponse(ErrorCode.NotFound, "User");
                 }
+                var role = await _userManager.GetRolesAsync(user);
                 UserForView item = _mapper.Map<UserForView>(user);
+                item.Role = role.FirstOrDefault();
                 return item;
             }
             catch (Exception ex)
