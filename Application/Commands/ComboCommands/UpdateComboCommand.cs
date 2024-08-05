@@ -62,6 +62,8 @@ namespace Application.Commands.ComboCommands
                 var updatedProductCombos = comboDto.ProductCombos;
                 var productCombosToRemove = existingProductCombos.Where(pc => !updatedProductCombos.Any(upc => comboDto.Id == pc.ProductId)).ToList();
 
+                //
+
                 foreach (var productCombo in productCombosToRemove)
                 {
                     combo.ProductCombos.Remove(productCombo);
@@ -90,6 +92,7 @@ namespace Application.Commands.ComboCommands
                         combo.ProductCombos.Add(newProductCombo);
                     }
                 }
+             
 
                 _mapper.Map(comboDto, combo);
                 _unitOfWork.Combo.UpdateCombo(combo);

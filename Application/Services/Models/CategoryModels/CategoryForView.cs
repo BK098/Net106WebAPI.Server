@@ -6,5 +6,7 @@ namespace Application.Services.Models.CategoryModels
     {
         public Guid Id { get; set; }
         public int ProductCount { get; set; }
+        public bool IsDeleted { get; set; } // Thêm trường này
+
     }
 }

@@ -4,6 +4,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using System.Data;
 using System.Text.Json.Serialization;
 
 namespace Application.Queries.UserQueries
@@ -31,7 +32,10 @@ namespace Application.Queries.UserQueries
         public async Task<UserForView> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
         {
             AppUser user = await _userManager.FindByIdAsync(request.User.Id);
+            var roles = await _userManager.GetRolesAsync(user);
             UserForView item = _mapper.Map<UserForView>(user);
+            item.Role = roles.FirstOrDefault();
+            var userForViewList = new List<UserForView>();
             return item;
         }
     }

@@ -16,10 +16,10 @@ namespace Application.Services.Models.ComboModels
                 .NotNull().WithMessage("Không được để trống")
                 .NotEmpty().WithMessage("Bắt buộc phải có");
             RuleFor(x => x.Price)
+                .GreaterThan(0).WithMessage($"Phải lớn hơn 0")  
                 .GreaterThan(0).WithMessage(x => $"Không được bé hơn 0");
             RuleFor(x => x.Discount)
-                .GreaterThanOrEqualTo(0).WithMessage("Phải lớn hơn hoặc bằng 0")
-                .LessThanOrEqualTo(100).WithMessage("Phải nhỏ hơn hoặc bằng 100");
+                .GreaterThanOrEqualTo(0).WithMessage("Phải lớn hơn hoặc bằng 0");
             RuleForEach(x => x.ProductCombos).SetValidator(new ProductComboForCreateValidator());
         }
     }

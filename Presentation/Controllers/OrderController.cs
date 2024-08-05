@@ -22,7 +22,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        [Authorize("admin")]
+        //[Authorize("admin")]
         public async Task<IActionResult> GetAll([FromQuery] SearchBaseModel model)
         {
             var orders = new GetAllOrdersQuery(model);

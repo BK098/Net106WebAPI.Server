@@ -24,7 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        [Authorize("admin")]
+        //[Authorize]
         public async Task<IActionResult> GetAll([FromQuery] SearchBaseModel model)
         {
             var users = new GetAllUsersQuery(model);
@@ -33,7 +33,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize("admin")]
+        //[Authorize("admin")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var user = new GetUserByIdQuery(id);
@@ -74,7 +74,7 @@ namespace Presentation.Controllers
             return BadRequest(response);
         }
         [HttpPost("role")]
-        [Authorize("admin")]
+        //[Authorize("admin")]
         public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleCommand userDto)
         {
             var user = await _userManager.GetUserAsync(User);

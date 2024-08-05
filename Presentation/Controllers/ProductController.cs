@@ -38,7 +38,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize("admin")]
+        //[Authorize("admin")]
         public async Task<IActionResult> Create([FromBody] CreateProductCommand productDto)
         {
             var response = await _mediator.Send(productDto);
@@ -50,7 +50,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize("admin")]
+        //[Authorize("admin")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductCommand productDto)
         {
             productDto.Id = id;

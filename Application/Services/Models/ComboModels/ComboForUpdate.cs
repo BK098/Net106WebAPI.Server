@@ -30,8 +30,7 @@ namespace Application.Services.Models.ComboModels
 
             RuleFor(x => x.Discount)
                 .GreaterThanOrEqualTo(0).WithMessage("Phải lớn hơn hoặc bằng 0")
-                .LessThanOrEqualTo(100).WithMessage("Phải nhỏ hơn hoặc bằng 100");
-
+            .GreaterThan(0).WithMessage($"Phải lớn hơn 0");
             RuleForEach(x => x.ProductCombos).SetValidator(new ProductComboForUpdateValidator());
         }
     }
@@ -40,6 +39,7 @@ namespace Application.Services.Models.ComboModels
     {
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
+
     }
 
     public class ProductComboForUpdateValidator : AbstractValidator<ProductComboForUpdate>

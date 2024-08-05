@@ -33,13 +33,14 @@ namespace Presentation.Controllers
             return response.Match<IActionResult>(
                  _ => Ok(response.AsT0),
                  error => NotFound(response.AsT1));
+
         }
 
         [HttpPost]
-        [Authorize("admin")]
-        public async Task<IActionResult> Create([FromBody] CreateComboCommand categoryDto)
+        //[Authorize("admin")]
+        public async Task<IActionResult> Create([FromBody] CreateComboCommand comboDto)
         {
-            var response = await _mediator.Send(categoryDto);
+            var response = await _mediator.Send(comboDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -48,7 +49,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize("admin")]
+        //[Authorize("admin")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateComboCommand comboDto)
         {
             comboDto.Id = id;

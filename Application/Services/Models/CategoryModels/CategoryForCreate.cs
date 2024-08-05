@@ -1,4 +1,4 @@
-﻿using Application.Services.Models.CategoryModels.Base;
+﻿    using Application.Services.Models.CategoryModels.Base;
 using FluentValidation;
 
 namespace Application.Services.Models.CategoryModels

@@ -14,9 +14,9 @@ namespace Application.Services.Models.ProductModels
                 .NotNull().WithMessage($"Không được để trống");
             RuleFor(x => x.Price)
                 .GreaterThanOrEqualTo(1).WithMessage($"Không được bé hơn hoặc bằng 0");
-            RuleFor(x => x.Discount)
-                .LessThanOrEqualTo(100).WithMessage("Không được lớn hơn 100")
-                .GreaterThanOrEqualTo(0).WithMessage($"Không được bé 0");
+           // RuleFor(x => x.Discount)
+                 //.GreaterThan(0).WithMessage($"Phải lớn hơn 0")
+                //.GreaterThanOrEqualTo(0).WithMessage($"Không được bé 0");
             RuleFor(x => x.StockQuantity)
                .GreaterThan(0).WithMessage($"Phải lớn hơn 0");
             RuleFor(x => x.CategoryId)

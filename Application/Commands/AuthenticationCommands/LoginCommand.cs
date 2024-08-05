@@ -72,7 +72,7 @@ namespace Application.Commands.AuthenticationCommands
 
                 if (roles.Any())
                 {
-                    var roleClaim = string.Join(",", roles);
+                    var roleClaim = string.Join(",", roles).Replace("\n", "");
                     claims.Add(new Claim(ClaimTypes.Role, roleClaim));
                 }
                 var token = CreateToken(claims);

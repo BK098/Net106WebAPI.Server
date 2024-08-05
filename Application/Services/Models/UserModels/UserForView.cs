@@ -6,5 +6,7 @@ namespace Application.Services.Models.UserModels
     {
         public string Id { get; set; }
         public string? Role { get; set; }
+        public bool IsDeleted { get; set; } // Thêm trường này
+
     }
 }
